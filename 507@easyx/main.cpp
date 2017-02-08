@@ -9,47 +9,48 @@
 
 #pragma comment( lib, "MSIMG32.LIB")
 
-#define DEBUG
+//#define DEBUG
 // Home work of Liu Fangrui @ 2017 02
 
-#ifdef DEBUG
+
 int main(void)
 {
 	int SCREEN_W = 640, SCREEN_H = 480;
 	initgraph(SCREEN_W, SCREEN_H);
-
-
-	setbkcolor(WHITE);
-	clearcliprgn();
-
-	MENU menu;
-	loadimage(&(menu.bk), _T("IMAGE"), _T("Menu"));
-	menu_loop(menu, SCREEN_W, SCREEN_H);
-
-	closegraph();
-}
-#endif
-
 #ifndef DEBUG
-int main(void)
-{
-	int SCREEN_W = 640, SCREEN_H = 480;
-	initgraph(SCREEN_W, SCREEN_H);
-
 	INTRO intro;
 	loadimage(&intro.bk, _T("IMAGE"), _T("Intro"));
 	intro_loop(intro, SCREEN_W, SCREEN_H);
-
+#endif
 	setbkcolor(WHITE);
 	clearcliprgn();
 
-	MENU menu;
-	loadimage(&(menu.bk), _T("IMAGE"), _T("Menu"));
-	menu_loop(menu, SCREEN_W, SCREEN_H);
+	while (1)
+	{
+		MENU menu;
+		loadimage(&(menu.bk), _T("IMAGE"), _T("Menu"));
+		menu.select = menu_loop(menu, SCREEN_W, SCREEN_H);
 
-	closegraph();
+		switch (menu.select)
+		{
+		case MENU_NEWGAME:
+		{
+			clearcliprgn();
+			outtextxy(0, 0, _T("NEWGAME"));
+			Sleep(1000);
+			getchar();
+			break;
+		}
+		case MENU_QUIT:
+		{
+			closegraph();
+			return 0;
+		}
+		}
+	}
+
 }
-#endif
+
 
 /*
 // ´´½¨»æÍ¼´°¿Ú

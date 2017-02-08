@@ -2,9 +2,9 @@
 #define DEBUG
 
 #ifdef DEBUG
-void menu_loop(MENU menu, int SCREEN_W, int SCREEN_H)
+int menu_loop(MENU menu, int SCREEN_W, int SCREEN_H)
 {
-	int button_return;
+	int button_return, cursor = 1;
 	float i = 0;
 	while ((int)i < (menu.bk).getwidth())
 	{
@@ -26,12 +26,39 @@ void menu_loop(MENU menu, int SCREEN_W, int SCREEN_H)
 		}
 
 		//if (menu_button_single(SCREEN_W, SCREEN_H) == QUIT) break;
-		button_return = menu_button_single(SCREEN_W, SCREEN_H);
+		button_return = menu_button_single(SCREEN_W, SCREEN_H, cursor);
 		switch (button_return)
 		{
-		case QUIT:			return;
-		case KEY_UP:		break;
-
+		case KEY_QUIT:			return MENU_QUIT;
+		//case KEY_ENTER:		if(cursor == 0) cursor == 1;
+		case KEY_UP:
+		{
+			if (cursor > 1 && cursor <= 5)
+			{
+				cursor--;
+			}
+			break;
+		}
+		case KEY_DOWN:
+		{
+			if (cursor >= 1 && cursor < 5)
+			{
+				cursor++;
+			}
+			break;
+		}
+		case KEY_ENTER:
+		{
+			if (cursor != 5)
+			{
+				return 1000 + cursor;
+			}
+			else
+			{
+				return MENU_QUIT;
+			}
+		}
+		defalut:			break;
 		}
 
 		i += 1.0;
@@ -40,6 +67,7 @@ void menu_loop(MENU menu, int SCREEN_W, int SCREEN_H)
 		Sleep(50);
 		clearcliprgn();
 	}
+	return 0;
 }
 #endif
 

@@ -3,11 +3,9 @@
 void intro_loop(INTRO intro, int SCREEN_W, int SCREEN_H)
 {
 
-	// 获取绘图窗口和 img 对象的显存指针
 	DWORD* pbWnd = GetImageBuffer();
 	DWORD* pbImg = GetImageBuffer(&(intro.bk));
 
-	// 计算原图片每个点的颜色，实现逐渐变量的效果
 	int r, g, b;
 	for (int light = 1; light <= 64; light++)
 	{
