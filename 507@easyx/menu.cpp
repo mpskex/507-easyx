@@ -1,14 +1,11 @@
 #include <menu.h>
-
+#define DEBUG
 
 #ifdef DEBUG
 void menu_loop(MENU menu, int SCREEN_W, int SCREEN_H)
 {
-	DWORD* g_scr_pt = GetImageBuffer();
-	float i = 0, factor = 0;
-	RECT r = { 0, 0, SCREEN_W, SCREEN_H };
-	settextcolor(BLACK);
-	settextstyle(72, 0, _T("SYSTEM"));
+	int button_return;
+	float i = 0;
 	while ((int)i < (menu.bk).getwidth())
 	{
 		//if((int)i%2==0) cleardevice();
@@ -28,7 +25,15 @@ void menu_loop(MENU menu, int SCREEN_W, int SCREEN_H)
 			}
 		}
 
-		drawtext(_T("HOW DO YOU DO?"), &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+		//if (menu_button_single(SCREEN_W, SCREEN_H) == QUIT) break;
+		button_return = menu_button_single(SCREEN_W, SCREEN_H);
+		switch (button_return)
+		{
+		case QUIT:			return;
+		case KEY_UP:		break;
+
+		}
+
 		i += 1.0;
 		if (i >= (menu.bk).getwidth()) i = -(menu.bk).getwidth();
 

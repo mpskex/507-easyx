@@ -2,19 +2,16 @@
 #include <stdio.h>
 #include <graphics.h>
 #include <conio.h>
-#define DEBUG
+
+#include <menu_button.h>
+
 
 // Menu
 
 typedef struct menu
 {
 	IMAGE bk;
-	LOGFONT title;
-	LOGFONT newgame;
-	LOGFONT resume;
-	LOGFONT chapt;
-	LOGFONT option;
-	LOGFONT exit;
+	BUTTON_FONT font;
 } MENU;
 
 void menu_loop(MENU menu, int SCREEN_W, int SCREEN_H);

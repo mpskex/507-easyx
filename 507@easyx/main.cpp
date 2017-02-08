@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <graphics.h>
 #include <conio.h>
+#include <windows.h>
 
 #include <menu.h>
 #include <intro.h>
@@ -14,14 +15,9 @@
 #ifdef DEBUG
 int main(void)
 {
-	// 初始化绘图窗口
 	int SCREEN_W = 640, SCREEN_H = 480;
 	initgraph(SCREEN_W, SCREEN_H);
 
-	// 定义并加载图片
-	INTRO intro;
-	loadimage(&intro.bk,_T("IMAGE"), _T("Intro"));
-	intro_loop(intro, SCREEN_W, SCREEN_H);
 
 	setbkcolor(WHITE);
 	clearcliprgn();
@@ -30,8 +26,6 @@ int main(void)
 	loadimage(&(menu.bk), _T("IMAGE"), _T("Menu"));
 	menu_loop(menu, SCREEN_W, SCREEN_H);
 
-	// 按任意键退出
-	getchar();
 	closegraph();
 }
 #endif
@@ -39,11 +33,9 @@ int main(void)
 #ifndef DEBUG
 int main(void)
 {
-	// 初始化绘图窗口
 	int SCREEN_W = 640, SCREEN_H = 480;
 	initgraph(SCREEN_W, SCREEN_H);
 
-	// 定义并加载图片
 	INTRO intro;
 	loadimage(&intro.bk, _T("IMAGE"), _T("Intro"));
 	intro_loop(intro, SCREEN_W, SCREEN_H);
@@ -55,8 +47,6 @@ int main(void)
 	loadimage(&(menu.bk), _T("IMAGE"), _T("Menu"));
 	menu_loop(menu, SCREEN_W, SCREEN_H);
 
-	// 按任意键退出
-	getchar();
 	closegraph();
 }
 #endif
