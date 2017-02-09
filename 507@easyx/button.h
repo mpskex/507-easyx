@@ -3,7 +3,7 @@
 #include <Windows.h>
 #include <graphics.h>
 
-#define KEY_QUIT		-1
+#define KEY_QUIT	-1
 #define KEY_NONE	0
 #define KEY_UP		1
 #define KEY_DOWN	2
@@ -18,5 +18,3 @@ typedef struct button_font
 	LOGFONT sel_font;
 } BUTTON_FONT;
 
-
-int menu_button_single(int SCREEN_W, int SCREEN_H, int cursor);

@@ -24,7 +24,7 @@
     <ClCompile Include="..\..\507%40easyx\507%40easyx\intro.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\507%40easyx\507%40easyx\menu_button.cpp">
+    <ClCompile Include="..\..\507%40easyx\507%40easyx\about.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,7 +41,10 @@
     <ClInclude Include="..\..\507%40easyx\507%40easyx\intro.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="menu_button.h">
+    <ClInclude Include="button.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\507%40easyx\507%40easyx\about.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

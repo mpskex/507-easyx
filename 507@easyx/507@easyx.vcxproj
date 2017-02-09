@@ -155,13 +155,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\507%40easyx\507%40easyx\about.cpp" />
     <ClCompile Include="..\..\507%40easyx\507%40easyx\intro.cpp" />
     <ClCompile Include="..\..\507%40easyx\507%40easyx\menu.cpp" />
-    <ClCompile Include="..\..\507%40easyx\507%40easyx\menu_button.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="menu_button.h" />
+    <ClInclude Include="..\..\507%40easyx\507%40easyx\about.h" />
+    <ClInclude Include="button.h" />
     <ClInclude Include="..\..\507%40easyx\507%40easyx\intro.h" />
     <ClInclude Include="..\..\507%40easyx\507%40easyx\main.h" />
     <ClInclude Include="..\..\507%40easyx\507%40easyx\menu.h" />

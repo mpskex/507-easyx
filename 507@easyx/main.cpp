@@ -4,8 +4,10 @@
 #include <conio.h>
 #include <windows.h>
 
+#include <about.h>
 #include <menu.h>
 #include <intro.h>
+
 
 #pragma comment( lib, "MSIMG32.LIB")
 
@@ -39,6 +41,12 @@ int main(void)
 			outtextxy(0, 0, _T("NEWGAME"));
 			Sleep(1000);
 			getchar();
+			break;
+		}
+		case MENU_ABOUT:
+		{
+			ABOUT about;
+			about_loop(about, SCREEN_W, SCREEN_H);
 			break;
 		}
 		case MENU_QUIT:
