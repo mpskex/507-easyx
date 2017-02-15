@@ -7,6 +7,7 @@ int menu_loop(MENU menu, int SCREEN_W, int SCREEN_H)
 	float i = 0;
 	while ((int)i < (menu.bk).getwidth())
 	{
+		BeginBatchDraw();
 		for (int m = -(menu.bk).getwidth(); m < SCREEN_W + (menu.bk).getwidth(); m += 2 * (menu.bk).getwidth())
 		{
 			for (int n = 0; n < SCREEN_H; n += 2 * (menu.bk).getheight())
@@ -62,7 +63,8 @@ int menu_loop(MENU menu, int SCREEN_W, int SCREEN_H)
 		i += 1.0;
 		if (i >= (menu.bk).getwidth()) i = -(menu.bk).getwidth();
 
-		Sleep(50);
+		FlushBatchDraw();
+		Sleep(40);
 		clearcliprgn();
 	}
 	return 0;

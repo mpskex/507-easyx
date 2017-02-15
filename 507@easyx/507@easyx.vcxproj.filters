@@ -27,6 +27,9 @@
     <ClCompile Include="..\..\507%40easyx\507%40easyx\about.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\507%40easyx\507%40easyx\name.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\507%40easyx\507%40easyx\resource.h">
@@ -45,6 +48,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\..\507%40easyx\507%40easyx\about.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\507%40easyx\507%40easyx\name.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
