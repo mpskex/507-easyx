@@ -62,6 +62,8 @@ int menu_loop(MENU menu, int SCREEN_W, int SCREEN_H)
 
 		i += 1.0;
 		if (i >= (menu.bk).getwidth()) i = -(menu.bk).getwidth();
+		//这里解决了清空缓存区的问题
+		if (_kbhit()) _getch();
 
 		FlushBatchDraw();
 		Sleep(40);
@@ -105,4 +107,5 @@ int menu_button_single(int SCREEN_W, int SCREEN_H, int cursor)
 	else if (GetAsyncKeyState(VK_LEFT) & 1)		return KEY_LEFT;
 	else if (GetAsyncKeyState(VK_RETURN) & 1)	return KEY_ENTER;
 	else return KEY_NONE;
+
 }

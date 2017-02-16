@@ -34,7 +34,6 @@ int main(void)
 		loadimage(&(menu.bk), _T("IMAGE"), _T("Menu"));
 		menu.select = menu_loop(menu, SCREEN_W, SCREEN_H);
 		_getch();
-		fflush(stdin);
 
 		switch (menu.select)
 		{
@@ -43,7 +42,6 @@ int main(void)
 			clearcliprgn();
 			int flag;
 			flag = name_loop(SCREEN_W, SCREEN_H);
-			fflush(stdin);
 			break;
 		}
 		case MENU_ABOUT:
