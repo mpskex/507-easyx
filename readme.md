@@ -1,8 +1,8 @@
 # Game Pro on easyX
-### Actually this project is a homework of Advanced Programming Language Designing. For I would like to make it stronger and former, so I work this with a readme file that you are reading.
+### Actually this project is a homework of Advanced Programming Language Designing. I would like to make it stronger and former, so I work this with a readme file that you are reading.
 
 ## First :Language
-*   This Project is basically in C, for my instructor emphasized that 
+*   This Project is basically in C, cause my instructor emphasized that 
     DO NOT USE LANGUAGES WHICH IS NOT BELONG TO C.
 
 *   This is a very simple game, and to keep its simplicity, instructor 

@@ -42,9 +42,11 @@ int main(void)
 		// New game
 		case MENU_NEWGAME:
 		{
+			NAME name;
+			name.str = NULL;
 			clearcliprgn();
 			int flag;
-			flag = name_loop(SCREEN_W, SCREEN_H);
+			flag = name_loop(name, SCREEN_W, SCREEN_H);
 			break;
 		}
 		// About

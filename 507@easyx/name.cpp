@@ -3,12 +3,11 @@
 //#define DEBUG
 
 
-int name_loop(int SCREEN_W, int SCREEN_H)
+int name_loop(NAME name, int SCREEN_W, int SCREEN_H)
 {
 	int pos = 0;
 	wchar_t ch;
-	wchar_t *name;
-	name = (wchar_t*)calloc(BUFFSIZE, sizeof(wchar_t));
+	name.str = (wchar_t*)calloc(BUFFSIZE, sizeof(wchar_t));
 	settextcolor(BLACK);
 	settextstyle(72, 0, _T("SYSTEM"));
 	RECT title_rect = { 0, 0, SCREEN_W, 3*SCREEN_H/4};
@@ -19,7 +18,7 @@ int name_loop(int SCREEN_W, int SCREEN_H)
 		Sleep(50);
 		BeginBatchDraw();
 		drawtext(_T("WHAT IS YOUR NAME?"), &title_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-		drawtext(name, &name_rect, DT_CENTER | DT_WORDBREAK);
+		drawtext(name.str, &name_rect, DT_CENTER | DT_WORDBREAK);
 		FlushBatchDraw();
 
 		if (_kbhit())
@@ -55,6 +54,7 @@ int name_loop(int SCREEN_W, int SCREEN_H)
 				BeginBatchDraw();
 				drawtext(_T("Returned!"), &title_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 				FlushBatchDraw();
+				name.str[pos + 1] = '\0';
 				Sleep(200);
 				return 1;
 			}
@@ -64,15 +64,18 @@ int name_loop(int SCREEN_W, int SCREEN_H)
 				BeginBatchDraw();
 				drawtext(_T("Escaped!"), &title_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 				FlushBatchDraw();
+				// Release the pointer
+				free(name.str);
 				Sleep(200);
 				return 1;
 			}
 			else if (GetAsyncKeyState(VK_BACK) & 1)
 			{
+				if(pos>0) name.str[--pos] = 0;
 			}
 			else if(ch >=33 && ch <= 126)
 			{
-				if(pos<BUFFSIZE-1) name[pos++] = ch;
+				if(pos<BUFFSIZE-1) name.str[pos++] = ch;
 			}
 		}
 	}
