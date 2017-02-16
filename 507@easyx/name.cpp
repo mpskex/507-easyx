@@ -27,25 +27,25 @@ int name_loop(int SCREEN_W, int SCREEN_H)
 			ch = _getch();
 			if (GetAsyncKeyState(VK_UP) & 1)
 			{
-				//清空缓冲区的字符
+				// Clear the input buffer
 				_getch();
 				continue;
 			}
 			else if (GetAsyncKeyState(VK_DOWN) & 1)
 			{
-				//清空缓冲区的字符
+				//Clear the input buffer
 				_getch();
 				continue;
 			}
 			else if (GetAsyncKeyState(VK_RIGHT) & 1)
 			{
-				//清空缓冲区的字符
+				//Clear the input buffer
 				_getch();
 				continue;
 			}
 			else if (GetAsyncKeyState(VK_LEFT) & 1)
 			{
-				//清空缓冲区的字符
+				//Clear the input buffer
 				_getch();
 				continue;
 			}

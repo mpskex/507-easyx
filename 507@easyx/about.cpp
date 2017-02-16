@@ -11,11 +11,12 @@ void about_loop(ABOUT about, int SCREEN_W, int SCREEN_H)
 	{
 		clearcliprgn();
 		BeginBatchDraw();
+		// macro DT_WORDBREAK can enable auto-return 
 		drawtext(_T("This game is developed as a homework at first.\nAuthor: Liu Fangrui\nPlease contact mpskex@163.com\nHope you enjoy this game! :P\nLOL\n"), &r, DT_LEFT | DT_WORDBREAK);
 		FlushBatchDraw();
 		Sleep(50);
 
-		if (GetAsyncKeyState(VK_ESCAPE) & 1)
+		if ((GetAsyncKeyState(VK_ESCAPE) & 1) || (GetAsyncKeyState(VK_RETURN) & 1))
 		{
 			return;
 		}

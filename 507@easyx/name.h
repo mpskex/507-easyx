@@ -13,7 +13,7 @@
 
 typedef struct name
 {
-
+	wchar_t *str;
 }NAME;
 
 int name_loop(int SCREEN_W, int SCREEN_H);

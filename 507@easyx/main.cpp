@@ -1,13 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <graphics.h>
-#include <conio.h>
-#include <windows.h>
-
-#include <about.h>
-#include <menu.h>
-#include <intro.h>
-#include <name.h>
+#include <main.h>
 
 #pragma comment( lib, "MSIMG32.LIB")
 
@@ -18,25 +9,37 @@
 
 int main(void)
 {
+	// Define the Screen's Width and Height
 	int SCREEN_W = 640, SCREEN_H = 480;
 	initgraph(SCREEN_W, SCREEN_H);
+/* This part only be compiled in alpha or released version */
 #ifdef ALPHA
+	// the Intro
 	INTRO intro;
+	// We can only load the image in main
+	// For it can only be allocate (in memories)
+	// in this scope
 	loadimage(&intro.bk, _T("IMAGE"), _T("Intro"));
+	// Do the Intro code
 	intro_loop(intro, SCREEN_W, SCREEN_H);
 #endif
+	// We want a white background
 	setbkcolor(WHITE);
+	// Clear the whole clip
 	clearcliprgn();
+	// assign space for the Menu struct
 	MENU menu; 
+	loadimage(&(menu.bk), _T("IMAGE"), _T("Menu"));
+	// Into the main loop
 	while (1)
-	{
+	{ 
 		clearcliprgn();
-		loadimage(&(menu.bk), _T("IMAGE"), _T("Menu"));
+		// Get the selected option from the loop return
 		menu.select = menu_loop(menu, SCREEN_W, SCREEN_H);
-		_getch();
-
+		// Switch the cases with the return value
 		switch (menu.select)
 		{
+		// New game
 		case MENU_NEWGAME:
 		{
 			clearcliprgn();
@@ -44,12 +47,14 @@ int main(void)
 			flag = name_loop(SCREEN_W, SCREEN_H);
 			break;
 		}
+		// About
 		case MENU_ABOUT:
 		{
 			ABOUT about;
 			about_loop(about, SCREEN_W, SCREEN_H);
 			break;
 		}
+		// Exit
 		case MENU_QUIT:
 		{
 			closegraph();
@@ -62,22 +67,22 @@ int main(void)
 
 
 /*
-// ´´½¨»æÍ¼´°¿Ú
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½
 initgraph(640, 480);
 
 IMAGE img;
 loadimage(&img, _T("start.bmp"));
 
-// »ñÈ¡»æÍ¼´°¿ÚºÍ IMAGE ¶ÔÏóµÄ¾ä±ú£¬TransparentBlt º¯ÊýÐèÒªÓÃ
+// ï¿½ï¿½È¡ï¿½ï¿½Í¼ï¿½ï¿½ï¿½Úºï¿½ IMAGE ï¿½ï¿½ï¿½ï¿½ï¿½Ä¾ï¿½ï¿½ï¿½ï¿½ï¿½TransparentBlt ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½
 HDC dstDC = GetImageHDC();
 HDC srcDC = GetImageHDC(&img);
 
-// Ê¹ÓÃ Windows GDI º¯ÊýÊµÏÖÍ¸Ã÷Î»Í¼
-TransparentBlt(dstDC, 0, 0, img.getwidth(), img.getheight(), srcDC, 0, 0, img.getwidth(), img.getheight(), 0xffffff);     // ×îºóÒ»¸ö²ÎÊýÊÇ±íÊ¾Í¸Ã÷É«Îª°×É«
-// Ê¹ GDI ²Ù×÷ÉúÐ§
+// Ê¹ï¿½ï¿½ Windows GDI ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½Í¸ï¿½ï¿½Î»Í¼
+TransparentBlt(dstDC, 0, 0, img.getwidth(), img.getheight(), srcDC, 0, 0, img.getwidth(), img.getheight(), 0xffffff);     // ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç±ï¿½Ê¾Í¸ï¿½ï¿½É«Îªï¿½ï¿½É«
+// Ê¹ GDI ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§
 FlushBatchDraw();
 
-// °´ÈÎÒâ¼üÍË³ö
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½
 getchar();
 closegraph();
 */

@@ -40,4 +40,4 @@
     College of Computer Science and Technology  
     Beijing University of Technology
 
-Now off the class *Smile*
+Now off the class /*Smile*/

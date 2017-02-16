@@ -17,7 +17,6 @@ typedef struct menu
 {
 	int select;
 	IMAGE bk;
-	BUTTON_FONT font;
 } MENU;
 
 int menu_loop(MENU menu, int SCREEN_W, int SCREEN_H);

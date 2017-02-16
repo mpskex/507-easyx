@@ -4,10 +4,12 @@
 int menu_loop(MENU menu, int SCREEN_W, int SCREEN_H)
 {
 	int button_return, cursor = 1;
-	float i = 0;
-	while ((int)i < (menu.bk).getwidth())
+	int i = 0;
+	while (i < (menu.bk).getwidth())
 	{
+		// Begin to draw
 		BeginBatchDraw();
+		// Fill the Screen with bk
 		for (int m = -(menu.bk).getwidth(); m < SCREEN_W + (menu.bk).getwidth(); m += 2 * (menu.bk).getwidth())
 		{
 			for (int n = 0; n < SCREEN_H; n += 2 * (menu.bk).getheight())
@@ -22,8 +24,9 @@ int menu_loop(MENU menu, int SCREEN_W, int SCREEN_H)
 				putimage(m - i, n, &(menu.bk));
 			}
 		}
-
+		// Calling the button drawing function
 		button_return = menu_button_single(SCREEN_W, SCREEN_H, cursor);
+		// Take action according the key action
 		switch (button_return)
 		{
 		case KEY_QUIT:			
@@ -57,31 +60,33 @@ int menu_loop(MENU menu, int SCREEN_W, int SCREEN_H)
 				return MENU_QUIT;
 			}
 		}
-		defalut:			break;
+		default:	break;
 		}
 
-		i += 1.0;
+		i += 1;
 		if (i >= (menu.bk).getwidth()) i = -(menu.bk).getwidth();
-		//这里解决了清空缓存区的问题
+		// Clear the input buffer
 		if (_kbhit()) _getch();
-
+		// Apply those drawing
 		FlushBatchDraw();
-		Sleep(40);
+		// lock fps
+		Sleep(50);
+		// Clear the screen
 		clearcliprgn();
 	}
 	return 0;
 }
 
-#define DEBUG
-
 int menu_button_single(int SCREEN_W, int SCREEN_H, int cursor)
 {
+	// Set title style
 	settextcolor(BLACK);
 	settextstyle(72, 0, _T("SYSTEM"));
 	RECT r = { 0, 0, SCREEN_W, 3 * SCREEN_H / 4 };
+	// Draw the title
 	drawtext(_T("HOW DO YOU DO?"), &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
-
+	// Change the text style
 	settextstyle(36, 0, _T("SYSTEM"));
 	if (cursor == 1) settextcolor(RED);
 	else settextcolor(BLACK);
@@ -99,7 +104,7 @@ int menu_button_single(int SCREEN_W, int SCREEN_H, int cursor)
 	else settextcolor(BLACK);
 	outtextxy((int)SCREEN_W / 4, (int)SCREEN_H / 2 + 200, _T("Exit"));
 
-
+	// Handle the Key action
 	if (GetAsyncKeyState(VK_ESCAPE) & 1)		return KEY_QUIT;
 	else if (GetAsyncKeyState(VK_UP) & 1)		return KEY_UP;
 	else if (GetAsyncKeyState(VK_DOWN) & 1)		return KEY_DOWN;
@@ -107,5 +112,4 @@ int menu_button_single(int SCREEN_W, int SCREEN_H, int cursor)
 	else if (GetAsyncKeyState(VK_LEFT) & 1)		return KEY_LEFT;
 	else if (GetAsyncKeyState(VK_RETURN) & 1)	return KEY_ENTER;
 	else return KEY_NONE;
-
 }
