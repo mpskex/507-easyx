@@ -27,7 +27,7 @@
     <ClCompile Include="..\..\507%40easyx\507%40easyx\about.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\507%40easyx\507%40easyx\name.cpp">
+    <ClCompile Include="game.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,7 +50,7 @@
     <ClInclude Include="..\..\507%40easyx\507%40easyx\about.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\507%40easyx\507%40easyx\name.h">
+    <ClInclude Include="game.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -66,5 +66,16 @@
     <Image Include="..\..\507%40easyx\res\intro.jpg">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="..\..\507%40easyx\res\game_fish_player.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="..\..\507%40easyx\res\icon.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\507%40easyx\507%40easyx\image2.bin">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

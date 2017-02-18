@@ -29,6 +29,8 @@ void intro_loop(INTRO intro, int SCREEN_W, int SCREEN_H)
 				pbWnd[(SCREEN_H/2 - (intro.bk).getheight()/2 + i)*SCREEN_W + j + SCREEN_W/2 - (intro.bk).getwidth()/2] = RGB(r, g, b);
 			}
 		}
+		// Clear the input buffer
+		if (_kbhit()) _getch();
 		FlushBatchDraw();
 		Sleep(50);
 	}

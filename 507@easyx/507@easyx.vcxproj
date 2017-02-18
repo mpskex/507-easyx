@@ -158,12 +158,12 @@
     <ClCompile Include="..\..\507%40easyx\507%40easyx\about.cpp" />
     <ClCompile Include="..\..\507%40easyx\507%40easyx\intro.cpp" />
     <ClCompile Include="..\..\507%40easyx\507%40easyx\menu.cpp" />
-    <ClCompile Include="..\..\507%40easyx\507%40easyx\name.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\507%40easyx\507%40easyx\about.h" />
-    <ClInclude Include="..\..\507%40easyx\507%40easyx\name.h" />
+    <ClInclude Include="game.h" />
     <ClInclude Include="button.h" />
     <ClInclude Include="..\..\507%40easyx\507%40easyx\intro.h" />
     <ClInclude Include="..\..\507%40easyx\507%40easyx\main.h" />
@@ -174,8 +174,13 @@
     <ResourceCompile Include="..\..\507%40easyx\507%40easyx\Resource.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\507%40easyx\res\game_fish_player.bmp" />
+    <Image Include="..\..\507%40easyx\res\icon.ico" />
     <Image Include="..\..\507%40easyx\res\intro.jpg" />
     <Image Include="..\..\507%40easyx\res\menu.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\507%40easyx\507%40easyx\image2.bin" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -7,4 +7,4 @@
 #include <about.h>
 #include <menu.h>
 #include <intro.h>
-#include <name.h>
+#include <game.h>

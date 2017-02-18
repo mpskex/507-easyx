@@ -22,6 +22,7 @@ int main(void)
 	loadimage(&intro.bk, _T("IMAGE"), _T("Intro"));
 	// Do the Intro code
 	intro_loop(intro, SCREEN_W, SCREEN_H);
+	// Clear the input buffer
 #endif
 	// We want a white background
 	setbkcolor(WHITE);
@@ -42,11 +43,13 @@ int main(void)
 		// New game
 		case MENU_NEWGAME:
 		{
-			NAME name;
-			name.str = NULL;
+			GAME game;
+			loadimage(&game.player_fish, _T("IMAGE"), _T("GAME_FISH_PLAYER"));
 			clearcliprgn();
 			int flag;
-			flag = name_loop(name, SCREEN_W, SCREEN_H);
+			flag = name_loop(game, SCREEN_W, SCREEN_H);
+			clearcliprgn();
+			game_loop(game, SCREEN_W, SCREEN_H);
 			break;
 		}
 		// About
