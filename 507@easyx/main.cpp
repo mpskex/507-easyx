@@ -53,13 +53,13 @@ int main(void)
 			clearcliprgn();
 			break;
 		}
-		// About
 		case MENU_OPTION:
 		{
 			OPTION option;
 			option_loop(option, SCREEN_W, SCREEN_H);
 			break;
 		}
+		// About
 		case MENU_ABOUT:
 		{
 			ABOUT about;

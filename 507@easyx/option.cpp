@@ -106,12 +106,14 @@ int option_button_single(int SCREEN_W, int SCREEN_H, int cursor)
 
 	// Handle the Key action
 	if (GetAsyncKeyState(VK_ESCAPE) & 1)		return KEY_QUIT;
-	else if (GetAsyncKeyState(VK_UP) & 1)		return KEY_UP;
-	else if (GetAsyncKeyState(VK_DOWN) & 1)		return KEY_DOWN;
-	else if (GetAsyncKeyState(VK_RIGHT) & 1)	return KEY_RIGHT;
-	else if (GetAsyncKeyState(VK_LEFT) & 1)		return KEY_LEFT;
+	else if (GetAsyncKeyState(VK_UP) & 1)		{_getch(); return KEY_UP;}
+	else if (GetAsyncKeyState(VK_DOWN) & 1)		{_getch(); return KEY_DOWN;}
+	else if (GetAsyncKeyState(VK_RIGHT) & 1)	{_getch(); return KEY_RIGHT;}
+	else if (GetAsyncKeyState(VK_LEFT) & 1)		{_getch(); return KEY_LEFT;}
 	else if (GetAsyncKeyState(VK_RETURN) & 1)	return KEY_ENTER;
 	else return KEY_NONE;
+	// Clear the input buffer
+	if (_kbhit()) _getch();
 }
 
 int option_loop(OPTION option, int SCREEN_W, int SCREEN_H)
@@ -193,7 +195,6 @@ int option_loop(OPTION option, int SCREEN_W, int SCREEN_H)
 		}
 
 		// Clear the input buffer
-		if (_kbhit()) _getch();
 		Sleep(50);
 		clearcliprgn();
 	}

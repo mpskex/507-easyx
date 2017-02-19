@@ -70,6 +70,7 @@ int name_loop(GAME game, int SCREEN_W, int SCREEN_H)
 				FlushBatchDraw();
 				// Release the pointer
 				Sleep(200);
+				clearcliprgn();
 				return 1;
 			}
 			else if (GetAsyncKeyState(VK_BACK) & 1)
@@ -85,6 +86,7 @@ int name_loop(GAME game, int SCREEN_W, int SCREEN_H)
 }
 int game_loop(GAME game, int SCREEN_W, int SCREEN_H)
 {
+	clearcliprgn();
 	RECT title_rect = { 0, 0, SCREEN_W, 3 * SCREEN_H / 4 };
 
 	while (1)
@@ -139,6 +141,7 @@ int game_main(GAME game, int SCREEN_W, int SCREEN_H)
 	}
 	else
 	{
+		clearcliprgn();
 		return 0;
 	}
 }
