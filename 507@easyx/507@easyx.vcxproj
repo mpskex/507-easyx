@@ -158,11 +158,13 @@
     <ClCompile Include="..\..\507%40easyx\507%40easyx\about.cpp" />
     <ClCompile Include="..\..\507%40easyx\507%40easyx\intro.cpp" />
     <ClCompile Include="..\..\507%40easyx\507%40easyx\menu.cpp" />
+    <ClCompile Include="..\..\507%40easyx\507%40easyx\option.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\507%40easyx\507%40easyx\about.h" />
+    <ClInclude Include="..\..\507%40easyx\507%40easyx\option.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="button.h" />
     <ClInclude Include="..\..\507%40easyx\507%40easyx\intro.h" />

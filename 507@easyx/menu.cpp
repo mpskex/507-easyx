@@ -1,6 +1,78 @@
 #include <menu.h>
 #define DEBUG
 
+int menu_button_single(int SCREEN_W, int SCREEN_H, int cursor)
+{
+	// Set title style
+	settextcolor(BLACK);
+	settextstyle(72, 0, _T("SYSTEM"));
+	RECT r = { 0, 0, SCREEN_W, 3 * SCREEN_H / 4 };
+	// Draw the title
+	drawtext(_T("THE ADV OF LinUs"), &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+
+	// Change the text style
+	settextstyle(36, 0, _T("SYSTEM"));
+	if (cursor == 1)
+	{
+		settextcolor(RED);
+		outtextxy((int)SCREEN_W / 4, (int)SCREEN_H / 2 + 40, _T("->Newgame<-"));
+	}
+	else
+	{
+		settextcolor(BLACK);
+		outtextxy((int)SCREEN_W / 4, (int)SCREEN_H / 2 + 40, _T("Newgame"));
+	}
+	if (cursor == 2)
+	{
+		settextcolor(RED);
+		outtextxy((int)SCREEN_W / 4, (int)SCREEN_H / 2 + 80, _T("->Resume<-"));
+	}
+	else
+	{
+		settextcolor(BLACK);
+		outtextxy((int)SCREEN_W / 4, (int)SCREEN_H / 2 + 80, _T("Resume"));
+	}
+	if (cursor == 3)
+	{
+		settextcolor(RED);
+		outtextxy((int)SCREEN_W / 4, (int)SCREEN_H / 2 + 120, _T("->Option<-"));
+	}
+	else
+	{
+		settextcolor(BLACK);
+		outtextxy((int)SCREEN_W / 4, (int)SCREEN_H / 2 + 120, _T("Option"));
+	}
+	if (cursor == 4)
+	{
+		settextcolor(RED);
+		outtextxy((int)SCREEN_W / 4, (int)SCREEN_H / 2 + 160, _T("->About<-"));
+	}
+	else
+	{
+		settextcolor(BLACK);
+		outtextxy((int)SCREEN_W / 4, (int)SCREEN_H / 2 + 160, _T("About"));
+	}
+	if (cursor == 5)
+	{
+		settextcolor(RED);
+		outtextxy((int)SCREEN_W / 4, (int)SCREEN_H / 2 + 200, _T("->Exit<-"));
+	}
+	else
+	{
+		settextcolor(BLACK);
+		outtextxy((int)SCREEN_W / 4, (int)SCREEN_H / 2 + 200, _T("Exit"));
+	}
+
+	// Handle the Key action
+	if (GetAsyncKeyState(VK_ESCAPE) & 1)		return KEY_QUIT;
+	else if (GetAsyncKeyState(VK_UP) & 1)		return KEY_UP;
+	else if (GetAsyncKeyState(VK_DOWN) & 1)		return KEY_DOWN;
+	else if (GetAsyncKeyState(VK_RIGHT) & 1)	return KEY_RIGHT;
+	else if (GetAsyncKeyState(VK_LEFT) & 1)		return KEY_LEFT;
+	else if (GetAsyncKeyState(VK_RETURN) & 1)	return KEY_ENTER;
+	else return KEY_NONE;
+}
+
 int menu_loop(MENU menu, int SCREEN_W, int SCREEN_H)
 {
 	int button_return, cursor = 1;
@@ -75,41 +147,4 @@ int menu_loop(MENU menu, int SCREEN_W, int SCREEN_H)
 		clearcliprgn();
 	}
 	return 0;
-}
-
-int menu_button_single(int SCREEN_W, int SCREEN_H, int cursor)
-{
-	// Set title style
-	settextcolor(BLACK);
-	settextstyle(72, 0, _T("SYSTEM"));
-	RECT r = { 0, 0, SCREEN_W, 3 * SCREEN_H / 4 };
-	// Draw the title
-	drawtext(_T("HOW DO YOU DO?"), &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-
-	// Change the text style
-	settextstyle(36, 0, _T("SYSTEM"));
-	if (cursor == 1) settextcolor(RED);
-	else settextcolor(BLACK);
-	outtextxy((int)SCREEN_W / 4, (int)SCREEN_H / 2 + 40, _T("Newgame"));
-	if (cursor == 2) settextcolor(RED);
-	else settextcolor(BLACK);
-	outtextxy((int)SCREEN_W / 4, (int)SCREEN_H / 2 + 80, _T("Resume"));
-	if (cursor == 3) settextcolor(RED);
-	else settextcolor(BLACK);
-	outtextxy((int)SCREEN_W / 4, (int)SCREEN_H / 2 + 120, _T("Chapter"));
-	if (cursor == 4) settextcolor(RED);
-	else settextcolor(BLACK);
-	outtextxy((int)SCREEN_W / 4, (int)SCREEN_H / 2 + 160, _T("About"));
-	if (cursor == 5) settextcolor(RED);
-	else settextcolor(BLACK);
-	outtextxy((int)SCREEN_W / 4, (int)SCREEN_H / 2 + 200, _T("Exit"));
-
-	// Handle the Key action
-	if (GetAsyncKeyState(VK_ESCAPE) & 1)		return KEY_QUIT;
-	else if (GetAsyncKeyState(VK_UP) & 1)		return KEY_UP;
-	else if (GetAsyncKeyState(VK_DOWN) & 1)		return KEY_DOWN;
-	else if (GetAsyncKeyState(VK_RIGHT) & 1)	return KEY_RIGHT;
-	else if (GetAsyncKeyState(VK_LEFT) & 1)		return KEY_LEFT;
-	else if (GetAsyncKeyState(VK_RETURN) & 1)	return KEY_ENTER;
-	else return KEY_NONE;
 }

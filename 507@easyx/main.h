@@ -8,6 +8,7 @@
 #include <menu.h>
 #include <intro.h>
 #include <game.h>
+#include <option.h>
 
 #define NAMEBUFF 25
 

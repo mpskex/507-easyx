@@ -60,7 +60,7 @@ int name_loop(GAME game, int SCREEN_W, int SCREEN_H)
 				FlushBatchDraw();
 				game.player[pos + 1] = '\0';
 				Sleep(200);
-				return 1;
+				return 0;
 			}
 			else if (GetAsyncKeyState(VK_ESCAPE) & 1)
 			{
@@ -129,11 +129,18 @@ int game_loop(GAME game, int SCREEN_W, int SCREEN_H)
 
 int game_main(GAME game, int SCREEN_W, int SCREEN_H)
 {
-	name_loop(game, SCREEN_W, SCREEN_H);
-	clearcliprgn();
-	game_loop(game, SCREEN_W, SCREEN_H);
-	clearcliprgn();
-	return 0;
+	int _return = name_loop(game, SCREEN_W, SCREEN_H);
+	if (_return == 0)
+	{
+		clearcliprgn();
+		game_loop(game, SCREEN_W, SCREEN_H);
+		clearcliprgn();
+		return 0;
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 int game_status_single(GAME game, int SCREEN_W, int SCREEN_H)

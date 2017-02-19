@@ -1,4 +1,4 @@
-# Game Pro on easyX
+# Game Proj on easyX
 ### Actually this project is a homework of Advanced Programming Language Designing. I would like to make it stronger and former, so I work this with a readme file that you are reading.
 
 ## First :Language

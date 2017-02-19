@@ -3,7 +3,7 @@
 #pragma comment( lib, "MSIMG32.LIB")
 
 //#define DEBUG
-//#define ALPHA
+#define ALPHA
 // Home work of Liu Fangrui @ 2017 02
 
 
@@ -54,6 +54,12 @@ int main(void)
 			break;
 		}
 		// About
+		case MENU_OPTION:
+		{
+			OPTION option;
+			option_loop(option, SCREEN_W, SCREEN_H);
+			break;
+		}
 		case MENU_ABOUT:
 		{
 			ABOUT about;

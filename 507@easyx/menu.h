@@ -8,7 +8,7 @@
 #define MENU_QUIT		1000
 #define MENU_NEWGAME	1001
 #define MENU_RESUME		1002
-#define MENU_CHAPT		1003
+#define MENU_OPTION		1003
 #define MENU_ABOUT		1004
 
 // Menu
@@ -20,4 +20,3 @@ typedef struct menu
 } MENU;
 
 int menu_loop(MENU menu, int SCREEN_W, int SCREEN_H);
-int menu_button_single(int SCREEN_W, int SCREEN_H, int cursor);
