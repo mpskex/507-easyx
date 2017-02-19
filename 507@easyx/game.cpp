@@ -109,11 +109,12 @@ int game_loop(GAME game, int SCREEN_W, int SCREEN_H)
 		BeginBatchDraw();
 		game_player_single(game, game.mouse.x, game.mouse.y, 5, SCREEN_W, SCREEN_H);
 		game_status_single(game, SCREEN_W, SCREEN_H);
-		FlushBatchDraw();
+		Sleep(10);
+		//FlushBatchDraw();
 		if (GetAsyncKeyState(VK_ESCAPE) & 1)
 		{
 			clearcliprgn();
-			BeginBatchDraw();
+			//BeginBatchDraw();
 			drawtext(_T("Returned!"), &title_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 			FlushBatchDraw();
 			Sleep(500);
@@ -126,6 +127,7 @@ int game_loop(GAME game, int SCREEN_W, int SCREEN_H)
 		//Sleep(10);
 		// Clear the input buffer
 		if (_kbhit()) _getch();
+		FlushBatchDraw();
 	}
 }
 
