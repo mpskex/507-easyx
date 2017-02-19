@@ -70,7 +70,7 @@ int menu_loop(MENU menu, int SCREEN_W, int SCREEN_H)
 		// Apply those drawing
 		FlushBatchDraw();
 		// lock fps
-		Sleep(50);
+		Sleep(60);
 		// Clear the screen
 		clearcliprgn();
 	}

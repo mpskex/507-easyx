@@ -10,9 +10,9 @@
 int main(void)
 {
 	// Define the Screen's Width and Height
-	int SCREEN_W = 640, SCREEN_H = 480;
+	int SCREEN_W = 1024, SCREEN_H = 576;
 	initgraph(SCREEN_W, SCREEN_H);
-/* This part only be compiled in alpha or released version */
+	/* This part only be compiled in alpha or released version */
 #ifdef ALPHA
 	// the Intro
 	INTRO intro;
@@ -44,12 +44,13 @@ int main(void)
 		case MENU_NEWGAME:
 		{
 			GAME game;
+			// Initiate the object resources
 			loadimage(&game.player_fish, _T("IMAGE"), _T("GAME_FISH_PLAYER"));
+			game.player = (wchar_t *)malloc(NAMEBUFF*sizeof(wchar_t));
+
 			clearcliprgn();
-			int flag;
-			flag = name_loop(game, SCREEN_W, SCREEN_H);
+			game_main(game, SCREEN_W, SCREEN_H);
 			clearcliprgn();
-			game_loop(game, SCREEN_W, SCREEN_H);
 			break;
 		}
 		// About
@@ -69,25 +70,3 @@ int main(void)
 	}
 
 }
-
-
-/*
-// ������ͼ����
-initgraph(640, 480);
-
-IMAGE img;
-loadimage(&img, _T("start.bmp"));
-
-// ��ȡ��ͼ���ں� IMAGE �����ľ�����TransparentBlt ������Ҫ��
-HDC dstDC = GetImageHDC();
-HDC srcDC = GetImageHDC(&img);
-
-// ʹ�� Windows GDI ����ʵ��͸��λͼ
-TransparentBlt(dstDC, 0, 0, img.getwidth(), img.getheight(), srcDC, 0, 0, img.getwidth(), img.getheight(), 0xffffff);     // ����һ�������Ǳ�ʾ͸��ɫΪ��ɫ
-// ʹ GDI ������Ч
-FlushBatchDraw();
-
-// ���������˳�
-getchar();
-closegraph();
-*/

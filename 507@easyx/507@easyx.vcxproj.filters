@@ -77,5 +77,6 @@
     <None Include="..\..\507%40easyx\507%40easyx\image2.bin">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="..\..\507%40easyx\readme.md" />
   </ItemGroup>
 </Project>
