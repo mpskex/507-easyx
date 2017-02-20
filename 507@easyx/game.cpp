@@ -1,6 +1,6 @@
 #include <game.h>
 
-//#define DEBUG
+#define DEBUG
 
 int name_loop(GAME game, int SCREEN_W, int SCREEN_H)
 {
@@ -54,12 +54,14 @@ int name_loop(GAME game, int SCREEN_W, int SCREEN_H)
 			}
 			else if (GetAsyncKeyState(VK_RETURN) & 1)
 			{
+
 				clearcliprgn();
 				BeginBatchDraw();
 				drawtext(_T("Returned!"), &title_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-				FlushBatchDraw();
 				game.player[pos + 1] = '\0';
-				Sleep(200);
+				FlushBatchDraw();
+				Sleep(100);
+				clearcliprgn();
 				return 0;
 			}
 			else if (GetAsyncKeyState(VK_ESCAPE) & 1)
@@ -69,7 +71,7 @@ int name_loop(GAME game, int SCREEN_W, int SCREEN_H)
 				drawtext(_T("Escaped!"), &title_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 				FlushBatchDraw();
 				// Release the pointer
-				Sleep(200);
+				Sleep(100);
 				clearcliprgn();
 				return 1;
 			}
@@ -87,73 +89,90 @@ int name_loop(GAME game, int SCREEN_W, int SCREEN_H)
 int game_loop(GAME game, int SCREEN_W, int SCREEN_H)
 {
 	clearcliprgn();
+	float level = 0;
+	srand((unsigned)time(NULL));
 	RECT title_rect = { 0, 0, SCREEN_W, 3 * SCREEN_H / 4 };
-
+	FlushMouseMsgBuffer();
+	Sleep(5);
 	while (1)
 	{
-		clearcliprgn();
-		game.mouse = GetMouseMsg();
-		switch (game.mouse.uMsg)
+		if (MouseHit())
 		{
-		case WM_MOUSEMOVE:
-			break;
+			game.mouse = GetMouseMsg();
+			switch (game.mouse.uMsg)
+			{
+			case WM_MOUSEMOVE:
+				break;
 
-		case WM_LBUTTONDOWN:
-			break;
+			case WM_LBUTTONDOWN:
+				break;
 
-		case WM_RBUTTONUP:
-			break;
+			case WM_RBUTTONUP:
+				break;
+			}
+			FlushMouseMsgBuffer();
 		}
-
-		FlushMouseMsgBuffer();
+		level = rand() % 50 / 10 + 0.5;
 		BeginBatchDraw();
-		game_player_single(game, game.mouse.x, game.mouse.y, 5, SCREEN_W, SCREEN_H);
+		game_player_single(game, game.mouse.x, game.mouse.y, level, SCREEN_W, SCREEN_H);
 		game_status_single(game, SCREEN_W, SCREEN_H);
-		Sleep(10);
-		//FlushBatchDraw();
 		if (GetAsyncKeyState(VK_ESCAPE) & 1)
 		{
 			clearcliprgn();
 			//BeginBatchDraw();
+			settextstyle(72, 0, _T("SYSTEM"));
 			drawtext(_T("Returned!"), &title_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 			FlushBatchDraw();
-			Sleep(500);
+			Sleep(200);
 			return 0;
 		}
 		else if (GetAsyncKeyState(VK_RETURN) & 1)
 		{
 
 		}
-		//Sleep(10);
 		// Clear the input buffer
 		if (_kbhit()) _getch();
+		Sleep(5);
 		FlushBatchDraw();
+		//FlushMouseMsgBuffer();
+		clearcliprgn();
 	}
 }
 
 int game_main(GAME game, int SCREEN_W, int SCREEN_H)
 {
-	int _return = name_loop(game, SCREEN_W, SCREEN_H);
+	int _return = 0;
+	_return = name_loop(game, SCREEN_W, SCREEN_H);
+#ifndef DEBUG
+	game_loop(game, SCREEN_W, SCREEN_H);
+	return 0;
+#endif
+#ifdef DEBUG
 	if (_return == 0)
 	{
-		clearcliprgn();
 		game_loop(game, SCREEN_W, SCREEN_H);
-		clearcliprgn();
 		return 0;
 	}
 	else
 	{
-		clearcliprgn();
-		return 0;
+		return 1;
 	}
+#endif
 }
 
 int game_status_single(GAME game, int SCREEN_W, int SCREEN_H)
 {
+	setlinecolor(BLACK);
+	setfillcolor(WHITE);
+	fillrectangle(3 * (int)(SCREEN_W / 4) - 10, 3 * (int)(SCREEN_H / 4) - 10, SCREEN_W - 10, SCREEN_H - 10);
 	settextstyle(36, 0, _T("SYSTEM"));
 	// This function need restruct with drawtext();
 	outtextxy(3 * (int)(SCREEN_W / 4), 3 * (int)(SCREEN_H / 4), _T("Player: "));
 	outtextxy(3 * (int)(SCREEN_W / 4), 5 * (int)(SCREEN_H / 6), game.player);
+#ifdef DEBUG
+	settextstyle(12, 0, _T("SYSTEM"));
+	outtextxy(0, 0, _T("DEBUG MODE"));
+#endif
 	return 0;
 }
 
@@ -181,6 +200,5 @@ int game_player_single(GAME game, int mouse_x, int mouse_y, float level, int SCR
 					game.player_fish.getwidth(), 
 					game.player_fish.getheight(), 
 					0x000000);
-	//FlushBatchDraw();
 	return 0;
 }

@@ -11,7 +11,7 @@ int option_button_single(int SCREEN_W, int SCREEN_H, int cursor)
 	drawtext(_T("- OPTION -"), &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
 	// Change the text style
-	settextstyle(36, 0, _T("SYSTEM"));
+	settextstyle((int)(36*(SCREEN_W/1024)), 0, _T("SYSTEM"));
 	if ((cursor & 0xf) == 1)
 	{
 		settextcolor(RED);
@@ -56,12 +56,12 @@ int option_button_single(int SCREEN_W, int SCREEN_H, int cursor)
 	if (cursor == 0x31)
 	{
 		settextcolor(RED);
-		outtextxy(3 * (int)SCREEN_W / 4, (int)SCREEN_H / 3 + 50, _T("->1024*768<-"));
+		outtextxy(3 * (int)SCREEN_W / 4, (int)SCREEN_H / 3 + 50, _T("->1024*576<-"));
 	}
 	else
 	{
 		settextcolor(BLACK);
-		outtextxy(3 * (int)SCREEN_W / 4, (int)SCREEN_H / 3 + 50, _T("1024*768"));
+		outtextxy(3 * (int)SCREEN_W / 4, (int)SCREEN_H / 3 + 50, _T("1024*576"));
 	}
 	if (cursor == 0x12)
 	{
@@ -113,7 +113,7 @@ int option_button_single(int SCREEN_W, int SCREEN_H, int cursor)
 	else if (GetAsyncKeyState(VK_RETURN) & 1)	return KEY_ENTER;
 	else return KEY_NONE;
 	// Clear the input buffer
-	if (_kbhit()) _getch();
+	while (_kbhit()) _getch();
 }
 
 int option_loop(OPTION option, int SCREEN_W, int SCREEN_H)
@@ -127,16 +127,6 @@ int option_loop(OPTION option, int SCREEN_W, int SCREEN_H)
 		FlushBatchDraw();
 		switch (button_return)
 		{
-		case KEY_QUIT:
-		{
-			return 1;
-			break;
-		}
-		case KEY_ENTER:
-		{
-			return 2;
-			break;
-		}
 		case KEY_UP:
 		{
 			if ((cursor & 0xf) > 1 && (cursor & 0xf) <= 2)
@@ -189,6 +179,16 @@ int option_loop(OPTION option, int SCREEN_W, int SCREEN_H)
 					cursor -= 0x10;
 				}
 			}
+			break;
+		}
+		case KEY_QUIT:
+		{
+			return 1;
+			break;
+		}
+		case KEY_ENTER:
+		{
+			return 2;
 			break;
 		}
 		default:	break;

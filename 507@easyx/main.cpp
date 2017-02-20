@@ -10,19 +10,21 @@
 int main(void)
 {
 	// Define the Screen's Width and Height
-	int SCREEN_W = 1024, SCREEN_H = 576;
+	int SCREEN_W = 640, SCREEN_H = 480;
 	initgraph(SCREEN_W, SCREEN_H);
 	/* This part only be compiled in alpha or released version */
 #ifdef ALPHA
-	// the Intro
-	INTRO intro;
-	// We can only load the image in main
-	// For it can only be allocate (in memories)
-	// in this scope
-	loadimage(&intro.bk, _T("IMAGE"), _T("Intro"));
-	// Do the Intro code
-	intro_loop(intro, SCREEN_W, SCREEN_H);
-	// Clear the input buffer
+	{
+		// the Intro
+		INTRO intro;
+		// We can only load the image in main
+		// For it can only be allocate (in memories)
+		// in this scope
+		loadimage(&intro.bk, _T("IMAGE"), _T("Intro"));
+		// Do the Intro code
+		intro_loop(intro, SCREEN_W, SCREEN_H);
+		// Clear the input buffer
+	}
 #endif
 	// We want a white background
 	setbkcolor(WHITE);
