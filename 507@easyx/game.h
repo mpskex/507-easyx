@@ -4,24 +4,25 @@
 #include <conio.h>
 #include <Windows.h>
 
+#include <fish.h>
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
 
 #define BUFFSIZE 25
 
-typedef struct fishes
-{
-	IMAGE img;
-	fishes *next_fish = NULL;
-}FISHES;
 
 typedef struct game
 {
-	wchar_t *player;
-	MOUSEMSG mouse;
-	IMAGE player_fish;
-	FISHES *other_fish;
+	wchar_t		*player;
+	int			time_begin, time_sec;
+
+	MOUSEMSG	mouse;
+
+	IMAGE		
+	IMAGE		player_fish;
+	IMAGE		background;
+	FISH		*fish;
 }GAME;
 
 //	Player input name;

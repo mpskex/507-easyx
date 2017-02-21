@@ -1,6 +1,6 @@
 #include <game.h>
 
-#define DEBUG
+//#define DEBUG
 
 int name_loop(GAME game, int SCREEN_W, int SCREEN_H)
 {
@@ -57,10 +57,11 @@ int name_loop(GAME game, int SCREEN_W, int SCREEN_H)
 
 				clearcliprgn();
 				BeginBatchDraw();
-				drawtext(_T("Returned!"), &title_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+				settextstyle(36, 0, _T("SYSTEM"));
+				drawtext(_T("\n\n\nUse your MOUSE to move LinUs.\n\n\nPRESS ANY KEY TO CONTINUE..."), &title_rect, DT_CENTER | DT_WORDBREAK);
 				game.player[pos + 1] = '\0';
 				FlushBatchDraw();
-				Sleep(100);
+				_getch();
 				clearcliprgn();
 				return 0;
 			}
@@ -90,7 +91,14 @@ int game_loop(GAME game, int SCREEN_W, int SCREEN_H)
 {
 	clearcliprgn();
 	float level = 0;
+	game.mouse.x = SCREEN_W / 2;
+	game.mouse.y = SCREEN_H / 2;
+
 	srand((unsigned)time(NULL));
+	game.time_begin = time(NULL);
+
+	game.fish = fish_add(2, SCREEN_W, SCREEN_H);
+
 	RECT title_rect = { 0, 0, SCREEN_W, 3 * SCREEN_H / 4 };
 	FlushMouseMsgBuffer();
 	Sleep(5);
@@ -114,8 +122,15 @@ int game_loop(GAME game, int SCREEN_W, int SCREEN_H)
 		}
 		level = rand() % 50 / 10 + 0.5;
 		BeginBatchDraw();
-		game_player_single(game, game.mouse.x, game.mouse.y, level, SCREEN_W, SCREEN_H);
+		game_background_single(game, SCREEN_W, SCREEN_H);
+		game_player_single(game, game.mouse.x, game.mouse.y, 2, SCREEN_W, SCREEN_H);
+
+		fish_single(game.fish, SCREEN_W, SCREEN_H);
+
 		game_status_single(game, SCREEN_W, SCREEN_H);
+
+
+
 		if (GetAsyncKeyState(VK_ESCAPE) & 1)
 		{
 			clearcliprgn();
@@ -144,10 +159,6 @@ int game_main(GAME game, int SCREEN_W, int SCREEN_H)
 	int _return = 0;
 	_return = name_loop(game, SCREEN_W, SCREEN_H);
 #ifndef DEBUG
-	game_loop(game, SCREEN_W, SCREEN_H);
-	return 0;
-#endif
-#ifdef DEBUG
 	if (_return == 0)
 	{
 		game_loop(game, SCREEN_W, SCREEN_H);
@@ -162,13 +173,35 @@ int game_main(GAME game, int SCREEN_W, int SCREEN_H)
 
 int game_status_single(GAME game, int SCREEN_W, int SCREEN_H)
 {
+	//-------------------Player Box-----------------------
 	setlinecolor(BLACK);
 	setfillcolor(WHITE);
-	fillrectangle(3 * (int)(SCREEN_W / 4) - 10, 3 * (int)(SCREEN_H / 4) - 10, SCREEN_W - 10, SCREEN_H - 10);
+	fillrectangle(3 * (int)(SCREEN_W / 4) - 12, 3 * (int)(SCREEN_H / 4) - 12, SCREEN_W - 8, SCREEN_H - 8);
+	rectangle(3 * (int)(SCREEN_W / 4) - 10, 3 * (int)(SCREEN_H / 4) - 10, SCREEN_W - 10, SCREEN_H - 10);
 	settextstyle(36, 0, _T("SYSTEM"));
 	// This function need restruct with drawtext();
 	outtextxy(3 * (int)(SCREEN_W / 4), 3 * (int)(SCREEN_H / 4), _T("Player: "));
 	outtextxy(3 * (int)(SCREEN_W / 4), 5 * (int)(SCREEN_H / 6), game.player);
+	//-------------------Player Box-----------------------
+
+	//-------------------Static Box-----------------------
+	setlinecolor(BLACK);
+	setfillcolor(WHITE);
+	fillrectangle(12, 3 * (int)(SCREEN_H / 4) - 12, 3 * (int)(SCREEN_W / 4) - 72, SCREEN_H - 10);
+	rectangle(10, 3 * (int)(SCREEN_H / 4) - 10, 3 * (int)(SCREEN_W / 4) - 72, SCREEN_H - 10);
+	settextstyle(36, 0, _T("SYSTEM"));
+	// This function need restruct with drawtext();
+
+	//	Timer
+	game.time_sec = time(NULL);
+	outtextxy(2 * (int)(SCREEN_W / 4), 3 * (int)(SCREEN_H / 4), _T("Time: "));
+	outtextxy(2 * (int)(SCREEN_W / 4), 5 * (int)(SCREEN_H / 6), (wchar_t)((game.time_sec - game.time_begin) / 10 + 48));
+	outtextxy(2 * (int)(SCREEN_W / 4) + 15, 5 * (int)(SCREEN_H / 6), (wchar_t)((game.time_sec - game.time_begin) % 10 + 48));
+
+
+	//-------------------Time Box-----------------------
+
+
 #ifdef DEBUG
 	settextstyle(12, 0, _T("SYSTEM"));
 	outtextxy(0, 0, _T("DEBUG MODE"));
@@ -178,6 +211,18 @@ int game_status_single(GAME game, int SCREEN_W, int SCREEN_H)
 
 int game_background_single(GAME game, int SCREEN_W, int SCREEN_H)
 {
+	HDC dstDC = GetImageHDC();
+	HDC srcDC = GetImageHDC(&game.background);
+
+	TransparentBlt(dstDC,
+		0,
+		0,
+		SCREEN_W,
+		SCREEN_H,
+		srcDC, 0, 0,
+		game.background.getwidth(),
+		game.background.getheight(),
+		0x000000);
 	return 0;
 }
 

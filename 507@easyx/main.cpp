@@ -3,14 +3,14 @@
 #pragma comment( lib, "MSIMG32.LIB")
 
 //#define DEBUG
-#define ALPHA
+//#define ALPHA
 // Home work of Liu Fangrui @ 2017 02
 
 
 int main(void)
 {
 	// Define the Screen's Width and Height
-	int SCREEN_W = 640, SCREEN_H = 480;
+	int SCREEN_W = 1024, SCREEN_H = 576;
 	initgraph(SCREEN_W, SCREEN_H);
 	/* This part only be compiled in alpha or released version */
 #ifdef ALPHA
@@ -48,7 +48,8 @@ int main(void)
 			GAME game;
 			// Initiate the object resources
 			loadimage(&game.player_fish, _T("IMAGE"), _T("GAME_FISH_PLAYER"));
-			game.player = (wchar_t *)malloc(NAMEBUFF*sizeof(wchar_t));
+			loadimage(&game.background, _T("IMAGE"), _T("GAME_BACKGROUND"));
+			game.player = (wchar_t *)malloc(NAMEBUFF * sizeof(wchar_t));
 
 			clearcliprgn();
 			game_main(game, SCREEN_W, SCREEN_H);
