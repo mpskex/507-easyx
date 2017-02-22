@@ -1,6 +1,6 @@
 #include <game.h>
 
-//#define DEBUG
+#define DEBUG
 
 int name_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 {
@@ -97,6 +97,7 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 
 	srand((unsigned)time(NULL));
 	game.time_begin = time(NULL);
+	fish_add(game, 1000, SCREEN_W, 3*(int)(SCREEN_H / 4));
 
 
 	RECT title_rect = { 0, 0, SCREEN_W, 3 * SCREEN_H / 4 };
@@ -123,9 +124,8 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 		level = rand() % 50 / 10 + 0.5;
 		BeginBatchDraw();
 		game_background_single(game, SCREEN_W, SCREEN_H);
-		game_player_single(game, game.mouse.x, game.mouse.y, 2, SCREEN_W, SCREEN_H);
-
-		fish_single(game, SCREEN_W, SCREEN_H);
+		fish_single(game, SCREEN_W, 3 * (int)(SCREEN_H / 4));
+		game_player_single(game, game.mouse.x, game.mouse.y, 2, SCREEN_W, 3 * (int)(SCREEN_H / 4));
 
 		game_status_single(game, SCREEN_W, SCREEN_H);
 
@@ -136,8 +136,9 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 			clearcliprgn();
 			//BeginBatchDraw();
 			settextstyle(72, 0, _T("SYSTEM"));
-			drawtext(_T("Returned!"), &title_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+			drawtext(_T("Loading..."), &title_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 			FlushBatchDraw();
+			fish_clear(game);
 			Sleep(200);
 			return 0;
 		}
@@ -147,7 +148,7 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 		}
 		// Clear the input buffer
 		if (_kbhit()) _getch();
-		Sleep(5);
+		//Sleep(5);
 		FlushBatchDraw();
 		//FlushMouseMsgBuffer();
 		clearcliprgn();
@@ -160,10 +161,7 @@ int game_main(GAME &game, int SCREEN_W, int SCREEN_H)
 	loadimage(&game.player_fish, _T("IMAGE"), _T("GAME_FISH_PLAYER"));
 	loadimage(&game.npc_fish, _T("IMAGE"), _T("GAME_FISH_01"));
 	loadimage(&game.background, _T("IMAGE"), _T("GAME_BACKGROUND"));
-	fish_init(game);
-	fish_add(game, 5, SCREEN_W, SCREEN_H);
 	_return = name_loop(game, SCREEN_W, SCREEN_H);
-#ifndef DEBUG
 	if (_return == 0)
 	{
 		game_loop(game, SCREEN_W, SCREEN_H);
@@ -173,7 +171,6 @@ int game_main(GAME &game, int SCREEN_W, int SCREEN_H)
 	{
 		return 1;
 	}
-#endif
 }
 
 int game_status_single(GAME &game, int SCREEN_W, int SCREEN_H)
@@ -256,71 +253,52 @@ int game_player_single(GAME &game, int mouse_x, int mouse_y, float level, int SC
 int fish_single(GAME &game, int SCREEN_W, int SCREEN_H)
 {
 	FISH *p;
+	IMAGE tmp;
+	tmp = game.npc_fish;
+	srand((unsigned)time(NULL));
 	for (p = game.fish; p != NULL; p = p->next)
 	{
 
-		putimage(p->x, p->y, &game.npc_fish);
 		HDC dstDC = GetImageHDC();
-		//HDC srcDC = GetImageHDC(&(p->img));
-		HDC srcDC = GetImageHDC(&(game.npc_fish));
-		/*
+		HDC srcDC = GetImageHDC(&tmp);
+		
 		TransparentBlt(dstDC,
 						p->x,
 						p->y,
-						(p->img).getwidth(),
-						(p->img).getheight(),
+						tmp.getwidth(),
+						tmp.getheight(),
 						srcDC, 0, 0,
-						(p->img).getwidth(),
-						(p->img).getheight(),
+						tmp.getwidth(),
+						tmp.getheight(),
 						0x000000);
-		*/
 
-		/*
-		TransparentBlt(dstDC,
-		p->x,
-		p->y,
-		(*img).getwidth(),
-		(*img).getheight(),
-		srcDC, 0, 0,
-		(*img).getwidth(),
-		(*img).getheight(),
-		0x000000);
-		*/
-		//FlushBatchDraw();
-		if (p->x <= 0)
+		if (p->x < 0)
 		{
-			p->x += rand() % 5;
+			p->x += rand() % 5 + 10;
 		}
-		else if (p->x >= SCREEN_W)
+		else if (p->x > SCREEN_W)
 		{
-			p->x -= rand() % 5;
+			p->x -= rand() % 5 - 10;
 		}
 		else
 		{
-			p->x += rand() % 6 - 3;
+			p->x += rand() % 10 - 5;
 		}
 
 		if (p->y <= 0)
 		{
-			p->y += rand() % 5;
+			p->y += rand() % 5 + 10;
 		}
 		else if (p->y >= SCREEN_W)
 		{
-			p->y -= rand() % 5;
+			p->y -= rand() % 5 - 10;
 		}
 		else
 		{
-			p->y += rand() % 6 - 3;
+			p->y += rand() % 10 - 5;
 		}
 	}
 
-	return 0;
-}
-
-int fish_init(GAME &game)
-{
-	game.fish = (FISH*)malloc(sizeof(FISH));
-	game.fish->next = NULL;
 	return 0;
 }
 
@@ -377,4 +355,20 @@ int fish_rm(FISH *head, FISH *fish)
 		p = p->next;
 	}
 	return -1;
+}
+
+int fish_clear(GAME &game)
+{
+	FISH *ptr = NULL, *ptr_b = NULL;
+	while (game.fish->next != NULL)
+	{
+		for (ptr = game.fish; ptr->next != NULL; ptr = ptr->next)
+		{
+			ptr_b = ptr;
+		}
+		ptr_b->next = NULL;
+		free(ptr);
+	}
+	free(game.fish);
+	return 0;
 }

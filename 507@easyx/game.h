@@ -12,7 +12,7 @@
 
 typedef struct fish
 {
-	IMAGE img;
+	//IMAGE img;
 	int x;
 	int y;
 	fish *next;
@@ -50,3 +50,4 @@ int fish_init(GAME &game);
 int fish_add(GAME &game, int num, int SCREEN_W, int SCREEN_H);
 int fish_rm(FISH *head, FISH *fish);
 int fish_single(GAME &game, int SCREEN_W, int SCREEN_H);
+int fish_clear(GAME &game);

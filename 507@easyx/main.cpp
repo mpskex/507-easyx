@@ -3,7 +3,7 @@
 #pragma comment( lib, "MSIMG32.LIB")
 
 //#define DEBUG
-//#define ALPHA
+#define ALPHA
 // Home work of Liu Fangrui @ 2017 02
 
 
@@ -17,10 +17,6 @@ int main(void)
 	{
 		// the Intro
 		INTRO intro;
-		// We can only load the image in main
-		// For it can only be allocate (in memories)
-		// in this scope
-		loadimage(&intro.bk, _T("IMAGE"), _T("Intro"));
 		// Do the Intro code
 		intro_loop(intro, SCREEN_W, SCREEN_H);
 		// Clear the input buffer
@@ -46,7 +42,6 @@ int main(void)
 		{
 			GAME game;
 			// Initiate the object resources
-
 			clearcliprgn();
 			game_main(game, SCREEN_W, SCREEN_H);
 			clearcliprgn();
