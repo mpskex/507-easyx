@@ -73,8 +73,9 @@ int menu_button_single(int SCREEN_W, int SCREEN_H, int cursor)
 	else return KEY_NONE;
 }
 
-int menu_loop(MENU menu, int SCREEN_W, int SCREEN_H)
+int menu_loop(MENU &menu, int SCREEN_W, int SCREEN_H)
 {
+	loadimage(&(menu.bk), _T("IMAGE"), _T("Menu"));
 	int button_return, cursor = 1;
 	int i = 0;
 	while (i < (menu.bk).getwidth())

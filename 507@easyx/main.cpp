@@ -31,8 +31,7 @@ int main(void)
 	// Clear the whole clip
 	clearcliprgn();
 	// assign space for the Menu struct
-	MENU menu; 
-	loadimage(&(menu.bk), _T("IMAGE"), _T("Menu"));
+	MENU menu;
 	// Into the main loop
 	while (1)
 	{ 
@@ -47,9 +46,6 @@ int main(void)
 		{
 			GAME game;
 			// Initiate the object resources
-			loadimage(&game.player_fish, _T("IMAGE"), _T("GAME_FISH_PLAYER"));
-			loadimage(&game.background, _T("IMAGE"), _T("GAME_BACKGROUND"));
-			game.player = (wchar_t *)malloc(NAMEBUFF * sizeof(wchar_t));
 
 			clearcliprgn();
 			game_main(game, SCREEN_W, SCREEN_H);

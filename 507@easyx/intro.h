@@ -7,4 +7,4 @@ typedef struct intro
 	IMAGE bk;
 } INTRO;
 
-void intro_loop(INTRO intro, int SCREEN_W, int SCREEN_H);
+void intro_loop(INTRO &intro, int SCREEN_W, int SCREEN_H);

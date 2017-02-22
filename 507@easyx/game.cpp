@@ -2,9 +2,10 @@
 
 //#define DEBUG
 
-int name_loop(GAME game, int SCREEN_W, int SCREEN_H)
+int name_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 {
 	int pos = 0;
+	game.player = (wchar_t *)malloc(BUFFSIZE * sizeof(wchar_t));
 	wchar_t ch;
 	//game.player = (wchar_t*)calloc(BUFFSIZE, sizeof(wchar_t));
 	int i;
@@ -87,7 +88,7 @@ int name_loop(GAME game, int SCREEN_W, int SCREEN_H)
 		}
 	}
 }
-int game_loop(GAME game, int SCREEN_W, int SCREEN_H)
+int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 {
 	clearcliprgn();
 	float level = 0;
@@ -97,7 +98,6 @@ int game_loop(GAME game, int SCREEN_W, int SCREEN_H)
 	srand((unsigned)time(NULL));
 	game.time_begin = time(NULL);
 
-	game.fish = fish_add(2, SCREEN_W, SCREEN_H);
 
 	RECT title_rect = { 0, 0, SCREEN_W, 3 * SCREEN_H / 4 };
 	FlushMouseMsgBuffer();
@@ -125,7 +125,7 @@ int game_loop(GAME game, int SCREEN_W, int SCREEN_H)
 		game_background_single(game, SCREEN_W, SCREEN_H);
 		game_player_single(game, game.mouse.x, game.mouse.y, 2, SCREEN_W, SCREEN_H);
 
-		fish_single(game.fish, SCREEN_W, SCREEN_H);
+		fish_single(game, SCREEN_W, SCREEN_H);
 
 		game_status_single(game, SCREEN_W, SCREEN_H);
 
@@ -154,9 +154,14 @@ int game_loop(GAME game, int SCREEN_W, int SCREEN_H)
 	}
 }
 
-int game_main(GAME game, int SCREEN_W, int SCREEN_H)
+int game_main(GAME &game, int SCREEN_W, int SCREEN_H)
 {
 	int _return = 0;
+	loadimage(&game.player_fish, _T("IMAGE"), _T("GAME_FISH_PLAYER"));
+	loadimage(&game.npc_fish, _T("IMAGE"), _T("GAME_FISH_01"));
+	loadimage(&game.background, _T("IMAGE"), _T("GAME_BACKGROUND"));
+	fish_init(game);
+	fish_add(game, 5, SCREEN_W, SCREEN_H);
 	_return = name_loop(game, SCREEN_W, SCREEN_H);
 #ifndef DEBUG
 	if (_return == 0)
@@ -171,7 +176,7 @@ int game_main(GAME game, int SCREEN_W, int SCREEN_H)
 #endif
 }
 
-int game_status_single(GAME game, int SCREEN_W, int SCREEN_H)
+int game_status_single(GAME &game, int SCREEN_W, int SCREEN_H)
 {
 	//-------------------Player Box-----------------------
 	setlinecolor(BLACK);
@@ -209,7 +214,7 @@ int game_status_single(GAME game, int SCREEN_W, int SCREEN_H)
 	return 0;
 }
 
-int game_background_single(GAME game, int SCREEN_W, int SCREEN_H)
+int game_background_single(GAME &game, int SCREEN_W, int SCREEN_H)
 {
 	HDC dstDC = GetImageHDC();
 	HDC srcDC = GetImageHDC(&game.background);
@@ -226,12 +231,12 @@ int game_background_single(GAME game, int SCREEN_W, int SCREEN_H)
 	return 0;
 }
 
-int game_npc_single(GAME game, int SCREEN_W, int SCREEN_H)
+int game_npc_single(GAME &game, int SCREEN_W, int SCREEN_H)
 {
 	return 0;
 }
 
-int game_player_single(GAME game, int mouse_x, int mouse_y, float level, int SCREEN_W, int SCREEN_H)
+int game_player_single(GAME &game, int mouse_x, int mouse_y, float level, int SCREEN_W, int SCREEN_H)
 {
 	HDC dstDC = GetImageHDC();
 	HDC srcDC = GetImageHDC(&game.player_fish);
@@ -246,4 +251,130 @@ int game_player_single(GAME game, int mouse_x, int mouse_y, float level, int SCR
 					game.player_fish.getheight(), 
 					0x000000);
 	return 0;
+}
+
+int fish_single(GAME &game, int SCREEN_W, int SCREEN_H)
+{
+	FISH *p;
+	for (p = game.fish; p != NULL; p = p->next)
+	{
+
+		putimage(p->x, p->y, &game.npc_fish);
+		HDC dstDC = GetImageHDC();
+		//HDC srcDC = GetImageHDC(&(p->img));
+		HDC srcDC = GetImageHDC(&(game.npc_fish));
+		/*
+		TransparentBlt(dstDC,
+						p->x,
+						p->y,
+						(p->img).getwidth(),
+						(p->img).getheight(),
+						srcDC, 0, 0,
+						(p->img).getwidth(),
+						(p->img).getheight(),
+						0x000000);
+		*/
+
+		/*
+		TransparentBlt(dstDC,
+		p->x,
+		p->y,
+		(*img).getwidth(),
+		(*img).getheight(),
+		srcDC, 0, 0,
+		(*img).getwidth(),
+		(*img).getheight(),
+		0x000000);
+		*/
+		//FlushBatchDraw();
+		if (p->x <= 0)
+		{
+			p->x += rand() % 5;
+		}
+		else if (p->x >= SCREEN_W)
+		{
+			p->x -= rand() % 5;
+		}
+		else
+		{
+			p->x += rand() % 6 - 3;
+		}
+
+		if (p->y <= 0)
+		{
+			p->y += rand() % 5;
+		}
+		else if (p->y >= SCREEN_W)
+		{
+			p->y -= rand() % 5;
+		}
+		else
+		{
+			p->y += rand() % 6 - 3;
+		}
+	}
+
+	return 0;
+}
+
+int fish_init(GAME &game)
+{
+	game.fish = (FISH*)malloc(sizeof(FISH));
+	game.fish->next = NULL;
+	return 0;
+}
+
+int fish_add(GAME &game, int num, int SCREEN_W, int SCREEN_H)
+{
+	game.fish = (FISH*)malloc(sizeof(FISH));
+	game.fish->next = NULL;
+	FISH *temp = game.fish;
+	game.fish->y = rand() % SCREEN_H;
+	if (rand() % 2)
+	{
+		game.fish->x = SCREEN_W;
+	}
+	else
+	{
+		game.fish->x = 0;
+	}
+	for (int i = 0; i < num - 1; i++)
+	{
+		//	Allocate the memory
+		FISH *_fish = (FISH*)malloc(sizeof(FISH));
+		temp->next = _fish;
+		//	Setting the relationship
+		_fish->next = NULL;
+		temp = _fish;
+		//	Intiating the fish object
+		//loadimage(&(_fish->img), _T("IMAGE"), _T("GAME_FISH_01"));
+		_fish->y = rand() % SCREEN_H;
+		if (rand() % 2)
+		{
+			_fish->x = SCREEN_W;
+		}
+		else
+		{
+			_fish->x = 0;
+		}
+	}
+	return 0;
+}
+
+int fish_rm(FISH *head, FISH *fish)
+{
+	FISH *p = head, *q = head;
+	while (p != NULL)
+	{
+		if (p == fish)
+		{
+			q->next = p->next;
+			free(p);
+			p = q->next;
+			return 0;
+		}
+		q = p;
+		p = p->next;
+	}
+	return -1;
 }

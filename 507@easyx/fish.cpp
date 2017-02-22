@@ -61,24 +61,25 @@ int fish_single(FISH *head, int SCREEN_W, int SCREEN_H)
 	return 0;
 }
 
-FISH* fish_add(int num, int SCREEN_W, int SCREEN_H)
+int fish_init(FISH *fish)
 {
-	int i;
-	FISH *temp = NULL;
-	FISH *head = NULL;
+	fish = (FISH*)malloc(sizeof(FISH));
+	fish->next = NULL;
+	return 0;
+}
 
-	for (i = 0; i < num - 1; i++)
+int fish_add(FISH *head, int num, int SCREEN_W, int SCREEN_H)
+{
+	FISH *temp = head;
+
+	for (int i = 0; i < num - 1; i++)
 	{
 		//	Allocate the memory
 		FISH *_fish = (FISH*)malloc(sizeof(FISH));
-		temp = _fish;
-		if (head == NULL)
-		{
-			head = _fish;
-		}
-		//	Setting the relationship
 		temp->next = _fish;
+		//	Setting the relationship
 		_fish->next = NULL;
+		temp = _fish;
 		//	Intiating the fish object
 		//loadimage(&(_fish->img), _T("IMAGE"), _T("GAME_FISH_01"));
 		_fish->y = rand() % SCREEN_H;
@@ -91,8 +92,9 @@ FISH* fish_add(int num, int SCREEN_W, int SCREEN_H)
 			_fish->y = 0;
 		}
 	}
-	return head;
+	return 0;
 }
+
 
 int fish_rm(FISH *head, FISH *fish)
 {

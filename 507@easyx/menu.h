@@ -19,4 +19,4 @@ typedef struct menu
 	IMAGE bk;
 } MENU;
 
-int menu_loop(MENU menu, int SCREEN_W, int SCREEN_H);
+int menu_loop(MENU &menu, int SCREEN_W, int SCREEN_H);

@@ -12,6 +12,7 @@ typedef struct fish
 	fish *next;
 }FISH;
 
-FISH* fish_add(int num, int SCREEN_W, int SCREEN_H);
+int fish_init(FISH &(*fish));
+int fish_add(FISH *head, int num, int SCREEN_W, int SCREEN_H);
 int fish_rm(FISH *head, FISH *fish);
 int fish_single(FISH *head, int SCREEN_W, int SCREEN_H);

@@ -1,7 +1,8 @@
 #include <intro.h>
 
-void intro_loop(INTRO intro, int SCREEN_W, int SCREEN_H)
+void intro_loop(INTRO &intro, int SCREEN_W, int SCREEN_H)
 {
+	loadimage(&intro.bk, _T("IMAGE"), _T("Intro"));
 	// The pointer handle image by pixels
 	DWORD* pbWnd = GetImageBuffer();
 	DWORD* pbImg = GetImageBuffer(&(intro.bk));
