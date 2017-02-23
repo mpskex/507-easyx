@@ -93,6 +93,7 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 {
 	clearcliprgn();
 	float level = 0;
+	int freq = 0;
 	game.mouse.x = SCREEN_W / 2;
 	game.mouse.y = SCREEN_H / 2;
 
@@ -106,7 +107,7 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 	while (1)
 	{
 		if (game.fish == NULL) fish_init(game, SCREEN_W, SCREEN_H);
-		fish_add(game, 2, SCREEN_W, 3 * (int)(SCREEN_H / 4));
+		if (freq % 10 == 0)fish_add(game, 2, SCREEN_W, 3 * (int)(SCREEN_H / 4));
 		if (MouseHit())
 		{
 			game.mouse = GetMouseMsg();
@@ -149,6 +150,8 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 		{
 
 		}
+
+		freq++;
 		// Clear the input buffer
 		if (_kbhit()) _getch();
 		//Sleep(5);
@@ -274,14 +277,18 @@ int fish_judge(GAME &game, int SCREEN_W, int SCREEN_H)
 	FISH *p, *p_t = NULL;
 	for (p = game.fish; p != NULL; p = p->next)
 	{
-		if (p->x + game.player_fish.getwidth() / 2 <= game.mouse.x + 5 * game.player_fish.getwidth() / 6 &&
-			p->x + game.player_fish.getwidth() / 2 >= game.mouse.x + game.player_fish.getwidth() / 6 &&
-			p->y + game.player_fish.getwidth() / 2 <= game.mouse.y + 5 * game.player_fish.getheight() /65 &&
-			p->y + game.player_fish.getwidth() / 2 <= game.mouse.y + game.player_fish.getheight() / 6
-			)
+		if	  ((p->x + (game.player_fish.getwidth() / 2) <= game.mouse.x + (3 * game.player_fish.getwidth() / 8) &&
+				p->x + (game.player_fish.getwidth() / 2) >= game.mouse.x - (3 * game.player_fish.getwidth() / 8) &&
+				p->y + (game.player_fish.getheight() / 2) <= game.mouse.y + (3 * game.player_fish.getheight() / 8) &&
+				p->y + (game.player_fish.getheight() / 2) >= game.mouse.y - (3 * game.player_fish.getheight() / 8)))
 		{
 			p = fish_rm(game, p);
 			game.score++;
+			return 1;
+		}
+		else if (p->x > SCREEN_W + 100 || p->x < -100 || p->y > SCREEN_H + 100 || p->y < -100)
+		{
+			p = fish_rm(game, p);
 			return 1;
 		}
 	}
@@ -303,8 +310,8 @@ int fish_single(GAME &game, int SCREEN_W, int SCREEN_H)
 		{
 
 			TransparentBlt(dstDC,
-							p->x,
-							p->y,
+							(int)(p->x),
+							(int)(p->y),
 							tmp.getwidth(),
 							tmp.getheight(),
 							srcDC, 0, 0,
@@ -314,28 +321,28 @@ int fish_single(GAME &game, int SCREEN_W, int SCREEN_H)
 
 			if (p->x < 0)
 			{
-				p->x += rand() % 5 + 10;
+				p->x += rand() % 5 + 1;
 			}
 			else if (p->x > SCREEN_W)
 			{
-				p->x -= rand() % 5 - 10;
+				p->x -= rand() % 10 / 10 - 1;
 			}
 			else
 			{
-				p->x += rand() % 10 - 5;
+				p->x += rand() % 20 / 10 - 1;
 			}
 
 			if (p->y <= 0)
 			{
-				p->y += rand() % 5 + 10;
+				p->y += rand() % 10 / 10 + 1;
 			}
 			else if (p->y >= SCREEN_W)
 			{
-				p->y -= rand() % 5 - 10;
+				p->y -= rand() % 10 / 10 - 1;
 			}
 			else
 			{
-				p->y += rand() % 10 - 5;
+				p->y += rand() % 20 / 10 - 1;
 			}
 		}
 

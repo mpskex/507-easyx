@@ -12,12 +12,11 @@
 
 typedef struct fish
 {
-	IMAGE img;
-	IMAGE img1;
-	IMAGE img2;
-	IMAGE img3;
-	int x;
-	int y;
+	//IMAGE img;
+	float x;
+	float y;
+	float s_x;
+	float s_y;
 	fish *next;
 }FISH;
 
