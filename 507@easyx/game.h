@@ -12,7 +12,10 @@
 
 typedef struct fish
 {
-	//IMAGE img;
+	IMAGE img;
+	IMAGE img1;
+	IMAGE img2;
+	IMAGE img3;
 	int x;
 	int y;
 	fish *next;
@@ -22,6 +25,7 @@ typedef struct game
 {
 	wchar_t		*player;
 	int			time_begin, time_sec;
+	int			score = 0;
 
 	MOUSEMSG	mouse;
 
@@ -42,12 +46,13 @@ int game_status_single(GAME &game, int SCREEN_W, int SCREEN_H);
 int game_background_single(GAME &game, int SCREEN_W, int SCRREN_H);
 int game_npc_single(GAME &game, int SCREEN_W, int SCREEN_H);
 
-int game_player_single(GAME &game, int x, int y, float level, int SCREEN_W, int SCREEN_H);
+int game_player_single(GAME &game,float level, int SCREEN_W, int SCREEN_H);
 int game_fish_single(GAME &game, int x, int y, int level, int SCREEN_W, int SCREEN_H);
 
 
-int fish_init(GAME &game);
+int fish_init(GAME &game, int SCREEN_W, int SCREEN_H);
 int fish_add(GAME &game, int num, int SCREEN_W, int SCREEN_H);
-int fish_rm(FISH *head, FISH *fish);
+int fish_judge(GAME &game, int SCREEN_W, int SCREEN_H);
+FISH *fish_rm(GAME &game, FISH *fish);
 int fish_single(GAME &game, int SCREEN_W, int SCREEN_H);
 int fish_clear(GAME &game);

@@ -17,6 +17,7 @@ int name_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 	settextstyle(72, 0, _T("SYSTEM"));
 	RECT title_rect = { 0, 0, SCREEN_W, 3*SCREEN_H/4};
 	RECT name_rect = { 0,SCREEN_H/2,SCREEN_W,SCREEN_H };
+
 	while (1)
 	{
 		clearcliprgn();
@@ -97,14 +98,15 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 
 	srand((unsigned)time(NULL));
 	game.time_begin = time(NULL);
-	fish_add(game, 1000, SCREEN_W, 3*(int)(SCREEN_H / 4));
-
+	//fish_add(game, 1000, SCREEN_W, 3*(int)(SCREEN_H / 4));
 
 	RECT title_rect = { 0, 0, SCREEN_W, 3 * SCREEN_H / 4 };
 	FlushMouseMsgBuffer();
 	Sleep(5);
 	while (1)
 	{
+		if (game.fish == NULL) fish_init(game, SCREEN_W, SCREEN_H);
+		fish_add(game, 2, SCREEN_W, 3 * (int)(SCREEN_H / 4));
 		if (MouseHit())
 		{
 			game.mouse = GetMouseMsg();
@@ -123,13 +125,14 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 		}
 		level = rand() % 50 / 10 + 0.5;
 		BeginBatchDraw();
+		
+		fish_judge(game, SCREEN_W, SCREEN_H);
+
 		game_background_single(game, SCREEN_W, SCREEN_H);
 		fish_single(game, SCREEN_W, 3 * (int)(SCREEN_H / 4));
-		game_player_single(game, game.mouse.x, game.mouse.y, 2, SCREEN_W, 3 * (int)(SCREEN_H / 4));
+		game_player_single(game, 2, SCREEN_W, 3 * (int)(SCREEN_H / 4));
 
 		game_status_single(game, SCREEN_W, SCREEN_H);
-
-
 
 		if (GetAsyncKeyState(VK_ESCAPE) & 1)
 		{
@@ -197,9 +200,15 @@ int game_status_single(GAME &game, int SCREEN_W, int SCREEN_H)
 	//	Timer
 	game.time_sec = time(NULL);
 	outtextxy(2 * (int)(SCREEN_W / 4), 3 * (int)(SCREEN_H / 4), _T("Time: "));
-	outtextxy(2 * (int)(SCREEN_W / 4), 5 * (int)(SCREEN_H / 6), (wchar_t)((game.time_sec - game.time_begin) / 10 + 48));
+	outtextxy(2 * (int)(SCREEN_W / 4), 5 * (int)(SCREEN_H / 6), (wchar_t)(((game.time_sec - game.time_begin) / 10 )% 10  + 48));
 	outtextxy(2 * (int)(SCREEN_W / 4) + 15, 5 * (int)(SCREEN_H / 6), (wchar_t)((game.time_sec - game.time_begin) % 10 + 48));
 
+	//	Score
+	outtextxy((int)(SCREEN_W / 4), 3 * (int)(SCREEN_H / 4), _T("Score: "));
+	outtextxy((int)(SCREEN_W / 4)	  , 5 * (int)(SCREEN_H / 6), (wchar_t)((game.score / 1000) % 10 + 48));
+	outtextxy((int)(SCREEN_W / 4) + 15, 5 * (int)(SCREEN_H / 6), (wchar_t)((game.score / 100) % 10 + 48));
+	outtextxy((int)(SCREEN_W / 4) + 30, 5 * (int)(SCREEN_H / 6), (wchar_t)((game.score / 10) % 10 + 48));
+	outtextxy((int)(SCREEN_W / 4) + 45, 5 * (int)(SCREEN_H / 6), (wchar_t)(game.score % 10 + 48));
 
 	//-------------------Time Box-----------------------
 
@@ -207,6 +216,16 @@ int game_status_single(GAME &game, int SCREEN_W, int SCREEN_H)
 #ifdef DEBUG
 	settextstyle(12, 0, _T("SYSTEM"));
 	outtextxy(0, 0, _T("DEBUG MODE"));
+	outtextxy(0, 20, _T("x:"));
+	outtextxy(45, 20, (wchar_t)(game.mouse.x % 10 + 48));
+	outtextxy(35, 20, (wchar_t)((game.mouse.x / 10) % 10 + 48));
+	outtextxy(25, 20, (wchar_t)((game.mouse.x / 100) % 10 + 48));
+	outtextxy(15, 20, (wchar_t)((game.mouse.x / 1000) % 10 + 48));
+	outtextxy(0, 40, _T("y:"));
+	outtextxy(45, 40, (wchar_t)(game.mouse.y % 10 + 48));
+	outtextxy(35, 40, (wchar_t)((game.mouse.y / 10) % 10 + 48));
+	outtextxy(25, 40, (wchar_t)((game.mouse.y / 100) % 10 + 48));
+	outtextxy(15, 40, (wchar_t)((game.mouse.y / 1000) % 10 + 48));
 #endif
 	return 0;
 }
@@ -233,14 +252,14 @@ int game_npc_single(GAME &game, int SCREEN_W, int SCREEN_H)
 	return 0;
 }
 
-int game_player_single(GAME &game, int mouse_x, int mouse_y, float level, int SCREEN_W, int SCREEN_H)
+int game_player_single(GAME &game, float level, int SCREEN_W, int SCREEN_H)
 {
 	HDC dstDC = GetImageHDC();
 	HDC srcDC = GetImageHDC(&game.player_fish);
 
 	TransparentBlt(dstDC, 
-					mouse_x - (int)(level * game.player_fish.getwidth() / 2),
-					mouse_y - (int)(level * game.player_fish.getheight() / 2),
+					game.mouse.x - (int)(level * game.player_fish.getwidth() / 2),
+					game.mouse.y - (int)(level * game.player_fish.getheight() / 2),
 					(int)(level * game.player_fish.getheight()), 
 					(int)(level * game.player_fish.getheight()), 
 					srcDC, 0, 0, 
@@ -250,63 +269,85 @@ int game_player_single(GAME &game, int mouse_x, int mouse_y, float level, int SC
 	return 0;
 }
 
+int fish_judge(GAME &game, int SCREEN_W, int SCREEN_H)
+{
+	FISH *p, *p_t = NULL;
+	for (p = game.fish; p != NULL; p = p->next)
+	{
+		if (p->x + game.player_fish.getwidth() / 2 <= game.mouse.x + 5 * game.player_fish.getwidth() / 6 &&
+			p->x + game.player_fish.getwidth() / 2 >= game.mouse.x + game.player_fish.getwidth() / 6 &&
+			p->y + game.player_fish.getwidth() / 2 <= game.mouse.y + 5 * game.player_fish.getheight() /65 &&
+			p->y + game.player_fish.getwidth() / 2 <= game.mouse.y + game.player_fish.getheight() / 6
+			)
+		{
+			p = fish_rm(game, p);
+			game.score++;
+			return 1;
+		}
+	}
+	return 0;
+}
+
+
 int fish_single(GAME &game, int SCREEN_W, int SCREEN_H)
 {
-	FISH *p;
+	FISH *p, *p_t = NULL;
 	IMAGE tmp;
 	tmp = game.npc_fish;
 	srand((unsigned)time(NULL));
-	for (p = game.fish; p != NULL; p = p->next)
+	HDC dstDC = GetImageHDC();
+	HDC srcDC = GetImageHDC(&tmp);
+	if (game.fish != NULL)
 	{
+		for (p = game.fish; p != NULL; p = p->next)
+		{
 
-		HDC dstDC = GetImageHDC();
-		HDC srcDC = GetImageHDC(&tmp);
-		
-		TransparentBlt(dstDC,
-						p->x,
-						p->y,
-						tmp.getwidth(),
-						tmp.getheight(),
-						srcDC, 0, 0,
-						tmp.getwidth(),
-						tmp.getheight(),
-						0x000000);
+			TransparentBlt(dstDC,
+							p->x,
+							p->y,
+							tmp.getwidth(),
+							tmp.getheight(),
+							srcDC, 0, 0,
+							tmp.getwidth(),
+							tmp.getheight(),
+							0x000000);
 
-		if (p->x < 0)
-		{
-			p->x += rand() % 5 + 10;
-		}
-		else if (p->x > SCREEN_W)
-		{
-			p->x -= rand() % 5 - 10;
-		}
-		else
-		{
-			p->x += rand() % 10 - 5;
+			if (p->x < 0)
+			{
+				p->x += rand() % 5 + 10;
+			}
+			else if (p->x > SCREEN_W)
+			{
+				p->x -= rand() % 5 - 10;
+			}
+			else
+			{
+				p->x += rand() % 10 - 5;
+			}
+
+			if (p->y <= 0)
+			{
+				p->y += rand() % 5 + 10;
+			}
+			else if (p->y >= SCREEN_W)
+			{
+				p->y -= rand() % 5 - 10;
+			}
+			else
+			{
+				p->y += rand() % 10 - 5;
+			}
 		}
 
-		if (p->y <= 0)
-		{
-			p->y += rand() % 5 + 10;
-		}
-		else if (p->y >= SCREEN_W)
-		{
-			p->y -= rand() % 5 - 10;
-		}
-		else
-		{
-			p->y += rand() % 10 - 5;
-		}
 	}
 
 	return 0;
 }
 
-int fish_add(GAME &game, int num, int SCREEN_W, int SCREEN_H)
+int fish_init(GAME &game, int SCREEN_W, int SCREEN_H)
 {
 	game.fish = (FISH*)malloc(sizeof(FISH));
 	game.fish->next = NULL;
-	FISH *temp = game.fish;
 	game.fish->y = rand() % SCREEN_H;
 	if (rand() % 2)
 	{
@@ -316,6 +357,15 @@ int fish_add(GAME &game, int num, int SCREEN_W, int SCREEN_H)
 	{
 		game.fish->x = 0;
 	}
+	return 0;
+}
+
+int fish_add(GAME &game, int num, int SCREEN_W, int SCREEN_H)
+{
+	FISH *temp;
+
+	for (temp = game.fish; temp->next != NULL; temp = temp->next);
+
 	for (int i = 0; i < num - 1; i++)
 	{
 		//	Allocate the memory
@@ -339,22 +389,26 @@ int fish_add(GAME &game, int num, int SCREEN_W, int SCREEN_H)
 	return 0;
 }
 
-int fish_rm(FISH *head, FISH *fish)
+FISH *fish_rm(GAME &game, FISH *fish)
 {
-	FISH *p = head, *q = head;
+	FISH *p = game.fish, *q = game.fish;
 	while (p != NULL)
 	{
 		if (p == fish)
 		{
+			if (p == game.fish)
+			{
+				game.fish = p->next;
+			}
 			q->next = p->next;
 			free(p);
 			p = q->next;
-			return 0;
+			return p;
 		}
 		q = p;
 		p = p->next;
 	}
-	return -1;
+	return NULL;
 }
 
 int fish_clear(GAME &game)
