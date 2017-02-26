@@ -107,7 +107,7 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 	while (1)
 	{
 		if (game.fish == NULL) fish_init(game, SCREEN_W, SCREEN_H);
-		if (freq % 10 == 0)fish_add(game, 2, SCREEN_W, 3 * (int)(SCREEN_H / 4));
+		if (freq % 100 == 0)fish_add(game, 2, SCREEN_W, 3 * (int)(SCREEN_H / 4));
 		if (MouseHit())
 		{
 			game.mouse = GetMouseMsg();
@@ -277,10 +277,10 @@ int fish_judge(GAME &game, int SCREEN_W, int SCREEN_H)
 	FISH *p, *p_t = NULL;
 	for (p = game.fish; p != NULL; p = p->next)
 	{
-		if	  ((p->x + (game.player_fish.getwidth() / 2) <= game.mouse.x + (3 * game.player_fish.getwidth() / 8) &&
-				p->x + (game.player_fish.getwidth() / 2) >= game.mouse.x - (3 * game.player_fish.getwidth() / 8) &&
-				p->y + (game.player_fish.getheight() / 2) <= game.mouse.y + (3 * game.player_fish.getheight() / 8) &&
-				p->y + (game.player_fish.getheight() / 2) >= game.mouse.y - (3 * game.player_fish.getheight() / 8)))
+		if	  ((p->x + (game.npc_fish.getwidth() / 2) <= game.mouse.x + (3 * game.player_fish.getwidth() / 8) &&
+				p->x + (game.npc_fish.getwidth() / 2) >= game.mouse.x - (3 * game.player_fish.getwidth() / 8) &&
+				p->y + (game.npc_fish.getheight() / 2) <= game.mouse.y + (3 * game.player_fish.getheight() / 8) &&
+				p->y + (game.npc_fish.getheight() / 2) >= game.mouse.y - (3 * game.player_fish.getheight() / 8)))
 		{
 			p = fish_rm(game, p);
 			game.score++;
@@ -301,7 +301,7 @@ int fish_single(GAME &game, int SCREEN_W, int SCREEN_H)
 	FISH *p, *p_t = NULL;
 	IMAGE tmp;
 	tmp = game.npc_fish;
-	srand((unsigned)time(NULL));
+	//srand((unsigned)time(NULL));
 	HDC dstDC = GetImageHDC();
 	HDC srcDC = GetImageHDC(&tmp);
 	if (game.fish != NULL)
@@ -312,37 +312,51 @@ int fish_single(GAME &game, int SCREEN_W, int SCREEN_H)
 			TransparentBlt(dstDC,
 							(int)(p->x),
 							(int)(p->y),
-							tmp.getwidth(),
-							tmp.getheight(),
+							(p->level/2) * tmp.getwidth(),
+							(p->level/2) * tmp.getheight(),
 							srcDC, 0, 0,
 							tmp.getwidth(),
 							tmp.getheight(),
 							0x000000);
 
-			if (p->x < 0)
+			if (p->x < 100)
 			{
-				p->x += rand() % 5 + 1;
+				p->x += rand() % 5 ;
 			}
-			else if (p->x > SCREEN_W)
+			else if (p->x > SCREEN_W - 100)
 			{
-				p->x -= rand() % 10 / 10 - 1;
+				p->x -= rand() % 5;
 			}
 			else
 			{
-				p->x += rand() % 20 / 10 - 1;
+				if (p->flag == 2)
+				{
+					p->x += rand() % 20 / 10;
+				}
+				else if (p->flag == 1)
+				{
+					p->x -= rand() % 20 / 10;
+				}
 			}
 
-			if (p->y <= 0)
+			if (p->y <= 10)
 			{
-				p->y += rand() % 10 / 10 + 1;
+				p->y += 5;
 			}
-			else if (p->y >= SCREEN_W)
+			else if (p->y >= 2 * SCREEN_H / 3)
 			{
-				p->y -= rand() % 10 / 10 - 1;
+				p->y -= 10;
 			}
 			else
 			{
-				p->y += rand() % 20 / 10 - 1;
+				if (p->flag == 2)
+				{
+					p->y += rand() % 20 / 10 - 1;
+				}
+				else if (p->flag == 1)
+				{
+					p->y -= rand() % 20 / 10 - 1;
+				}
 			}
 		}
 
@@ -384,13 +398,16 @@ int fish_add(GAME &game, int num, int SCREEN_W, int SCREEN_H)
 		//	Intiating the fish object
 		//loadimage(&(_fish->img), _T("IMAGE"), _T("GAME_FISH_01"));
 		_fish->y = rand() % SCREEN_H;
+		_fish->level = rand() % 3 + 1 + game.score / 100;
 		if (rand() % 2)
 		{
 			_fish->x = SCREEN_W;
+			_fish->flag = 1;
 		}
 		else
 		{
 			_fish->x = 0;
+			_fish->flag = 2;
 		}
 	}
 	return 0;

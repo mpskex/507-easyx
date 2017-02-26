@@ -17,6 +17,9 @@ typedef struct fish
 	float y;
 	float s_x;
 	float s_y;
+	float level;
+
+	int flag;
 	fish *next;
 }FISH;
 
@@ -25,6 +28,7 @@ typedef struct game
 	wchar_t		*player;
 	int			time_begin, time_sec;
 	int			score = 0;
+	int			level;
 
 	MOUSEMSG	mouse;
 
