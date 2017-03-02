@@ -107,7 +107,7 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 	while (1)
 	{
 		if (game.fish == NULL) fish_init(game, SCREEN_W, SCREEN_H);
-		if (freq % 100 == 0)fish_add(game, 2, SCREEN_W, 3 * (int)(SCREEN_H / 4));
+		if (freq % 10 == 0)fish_add(game, 2, SCREEN_W, 3 * (int)(SCREEN_H / 4));
 		if (MouseHit())
 		{
 			game.mouse = GetMouseMsg();
@@ -131,7 +131,7 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 
 		game_background_single(game, SCREEN_W, SCREEN_H);
 		fish_single(game, SCREEN_W, 3 * (int)(SCREEN_H / 4));
-		game_player_single(game, 2, SCREEN_W, 3 * (int)(SCREEN_H / 4));
+		game_player_single(game, SCREEN_W, 3 * (int)(SCREEN_H / 4));
 
 		game_status_single(game, SCREEN_W, SCREEN_H);
 
@@ -164,9 +164,19 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 int game_main(GAME &game, int SCREEN_W, int SCREEN_H)
 {
 	int _return = 0;
-	loadimage(&game.player_fish, _T("IMAGE"), _T("GAME_FISH_PLAYER"));
-	loadimage(&game.npc_fish, _T("IMAGE"), _T("GAME_FISH_01"));
+	// Intiate the game data
+	game.level = 1.0;
+
+	loadimage(&game.npc_fishes[0], _T("IMAGE"), _T("GAME_FISH_01"));
+	loadimage(&game.npc_fishes[1], _T("IMAGE"), _T("GAME_FISH_02"));
+	loadimage(&game.npc_fishes[2], _T("IMAGE"), _T("GAME_FISH_03"));
+	loadimage(&game.npc_fishes[3], _T("IMAGE"), _T("GAME_FISH_04"));
+
+	loadimage(&(game.player_fish), _T("IMAGE"), _T("GAME_FISH_PLAYER"));
+	loadimage(&(game.npc_fish), _T("IMAGE"), _T("GAME_FISH_01"));
 	loadimage(&game.background, _T("IMAGE"), _T("GAME_BACKGROUND"));
+
+
 	_return = name_loop(game, SCREEN_W, SCREEN_H);
 	if (_return == 0)
 	{
@@ -255,16 +265,16 @@ int game_npc_single(GAME &game, int SCREEN_W, int SCREEN_H)
 	return 0;
 }
 
-int game_player_single(GAME &game, float level, int SCREEN_W, int SCREEN_H)
+int game_player_single(GAME &game, int SCREEN_W, int SCREEN_H)
 {
 	HDC dstDC = GetImageHDC();
 	HDC srcDC = GetImageHDC(&game.player_fish);
 
 	TransparentBlt(dstDC, 
-					game.mouse.x - (int)(level * game.player_fish.getwidth() / 2),
-					game.mouse.y - (int)(level * game.player_fish.getheight() / 2),
-					(int)(level * game.player_fish.getheight()), 
-					(int)(level * game.player_fish.getheight()), 
+					game.mouse.x - (int)(game.level * game.player_fish.getwidth() / 2),
+					game.mouse.y - (int)(game.level * game.player_fish.getheight() / 2),
+					(int)(game.level * game.player_fish.getheight()), 
+					(int)(game.level * game.player_fish.getheight()), 
 					srcDC, 0, 0, 
 					game.player_fish.getwidth(), 
 					game.player_fish.getheight(), 
@@ -277,13 +287,16 @@ int fish_judge(GAME &game, int SCREEN_W, int SCREEN_H)
 	FISH *p, *p_t = NULL;
 	for (p = game.fish; p != NULL; p = p->next)
 	{
-		if	  ((p->x + (game.npc_fish.getwidth() / 2) <= game.mouse.x + (3 * game.player_fish.getwidth() / 8) &&
-				p->x + (game.npc_fish.getwidth() / 2) >= game.mouse.x - (3 * game.player_fish.getwidth() / 8) &&
-				p->y + (game.npc_fish.getheight() / 2) <= game.mouse.y + (3 * game.player_fish.getheight() / 8) &&
-				p->y + (game.npc_fish.getheight() / 2) >= game.mouse.y - (3 * game.player_fish.getheight() / 8)))
+		if	  ((p->x + ((p->level)* game.npc_fish.getwidth() / 2) <= game.mouse.x + (3 * game.level * game.player_fish.getwidth() / 8) &&
+				p->x + ((p->level)* game.npc_fish.getwidth() / 2) >= game.mouse.x - (3 * game.level * game.player_fish.getwidth() / 8) &&
+				p->y + ((p->level)* game.npc_fish.getheight() / 2) <= game.mouse.y + (3 * game.level * game.player_fish.getheight() / 8) &&
+				p->y + ((p->level)* game.npc_fish.getheight() / 2) >= game.mouse.y - (3 * game.level * game.player_fish.getheight() / 8)))
 		{
 			p = fish_rm(game, p);
+			// Reward to player
 			game.score++;
+			game.level += 0.01;
+
 			return 1;
 		}
 		else if (p->x > SCREEN_W + 100 || p->x < -100 || p->y > SCREEN_H + 100 || p->y < -100)
@@ -300,7 +313,7 @@ int fish_single(GAME &game, int SCREEN_W, int SCREEN_H)
 {
 	FISH *p, *p_t = NULL;
 	IMAGE tmp;
-	tmp = game.npc_fish;
+	//tmp = game.npc_fish;
 	//srand((unsigned)time(NULL));
 	HDC dstDC = GetImageHDC();
 	HDC srcDC = GetImageHDC(&tmp);
@@ -308,7 +321,8 @@ int fish_single(GAME &game, int SCREEN_W, int SCREEN_H)
 	{
 		for (p = game.fish; p != NULL; p = p->next)
 		{
-
+			tmp = game.npc_fishes[p->res_num];
+			HDC srcDC = GetImageHDC(&tmp);
 			TransparentBlt(dstDC,
 							(int)(p->x),
 							(int)(p->y),
@@ -378,6 +392,7 @@ int fish_init(GAME &game, int SCREEN_W, int SCREEN_H)
 	{
 		game.fish->x = 0;
 	}
+	game.fish->res_num = rand() % RES_FISHES;
 	return 0;
 }
 
@@ -385,8 +400,8 @@ int fish_add(GAME &game, int num, int SCREEN_W, int SCREEN_H)
 {
 	FISH *temp;
 
+	// Get the tail
 	for (temp = game.fish; temp->next != NULL; temp = temp->next);
-
 	for (int i = 0; i < num - 1; i++)
 	{
 		//	Allocate the memory
@@ -399,6 +414,7 @@ int fish_add(GAME &game, int num, int SCREEN_W, int SCREEN_H)
 		//loadimage(&(_fish->img), _T("IMAGE"), _T("GAME_FISH_01"));
 		_fish->y = rand() % SCREEN_H;
 		_fish->level = rand() % 3 + 1 + game.score / 100;
+		_fish->res_num = rand() % RES_FISHES;
 		if (rand() % 2)
 		{
 			_fish->x = SCREEN_W;
@@ -448,5 +464,19 @@ int fish_clear(GAME &game)
 		free(ptr);
 	}
 	free(game.fish);
+	return 0;
+}
+
+int res_fishes_load(GAME &game)
+{
+	//game.npc_fishes = (IMAGE*)malloc(RES_FISHES * sizeof(IMAGE));
+	loadimage(&game.npc_fishes[0], _T("IMAGE"), _T("GAME_FISH_01"));
+	loadimage(&game.npc_fishes[1], _T("IMAGE"), _T("GAME_FISH_02"));
+	return 0;
+}
+
+int res_fishes_clear(GAME &game)
+{
+
 	return 0;
 }
