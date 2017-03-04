@@ -11,10 +11,13 @@
 #define BUFFSIZE 		25
 #define RES_FISHES 		4
 #define TIME			3
+#define GAME_TIME		99
+#define GOD_TIME		100
+#define FISH_QUAT		10
 
 typedef struct fish
 {
-	//IMAGE img[300];
+	IMAGE img[300];
 	float x;
 	float y;
 	float s_x;
@@ -31,6 +34,7 @@ typedef struct game
 	wchar_t		*player;
 	int			time_begin, time_sec;
 	int			score = 0;
+	bool		god;
 	float			level;
 
 	MOUSEMSG	mouse;

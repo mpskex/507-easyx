@@ -94,6 +94,8 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 	clearcliprgn();
 	float level = 0;
 	int freq = 0;
+	int god_count = 0;
+	game.god = false;
 	game.mouse.x = SCREEN_W / 2;
 	game.mouse.y = SCREEN_H / 2;
 
@@ -107,7 +109,7 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 	while (1)
 	{
 		if (game.fish == NULL) fish_init(game, SCREEN_W, SCREEN_H);
-		if (freq % 10 == 0)fish_add(game, 2, SCREEN_W, 3 * (int)(SCREEN_H / 4));
+		if (freq % FISH_QUAT == 0)fish_add(game, 2, SCREEN_W, 3 * (int)(SCREEN_H / 4));
 		if (MouseHit())
 		{
 			game.mouse = GetMouseMsg();
@@ -131,7 +133,25 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 
 		game_background_single(game, SCREEN_W, SCREEN_H);
 		fish_single(game, SCREEN_W, 3 * (int)(SCREEN_H / 4));
-		game_player_single(game, SCREEN_W, 3 * (int)(SCREEN_H / 4));
+
+		if (game.god == true)
+		{
+			if (god_count < GOD_TIME)
+			{
+				if (god_count % 10 > 0 && god_count % 10 < 6) game_player_single(game, SCREEN_W, 3 * (int)(SCREEN_H / 4));
+			}
+			else
+			{
+				god_count = 0;
+				game.god = false;
+			}
+			god_count++;
+		}
+		else
+		{
+			game_player_single(game, SCREEN_W, 3 * (int)(SCREEN_H / 4));
+		}
+
 
 		game_status_single(game, SCREEN_W, SCREEN_H);
 
@@ -149,6 +169,17 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 		else if (GetAsyncKeyState(VK_RETURN) & 1)
 		{
 
+		}
+		if (game.time_sec - game.time_begin > GAME_TIME)
+		{
+			clearcliprgn();
+			//BeginBatchDraw();
+			settextstyle(72, 0, _T("SYSTEM"));
+			drawtext(_T("Loading..."), &title_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+			FlushBatchDraw();
+			fish_clear(game);
+			Sleep(200);
+			return 0;
 		}
 
 		freq++;
@@ -213,8 +244,8 @@ int game_status_single(GAME &game, int SCREEN_W, int SCREEN_H)
 	//	Timer
 	game.time_sec = time(NULL);
 	outtextxy(2 * (int)(SCREEN_W / 4), 3 * (int)(SCREEN_H / 4), _T("Time: "));
-	outtextxy(2 * (int)(SCREEN_W / 4), 5 * (int)(SCREEN_H / 6), (wchar_t)(((game.time_sec - game.time_begin) / 10 )% 10  + 48));
-	outtextxy(2 * (int)(SCREEN_W / 4) + 15, 5 * (int)(SCREEN_H / 6), (wchar_t)((game.time_sec - game.time_begin) % 10 + 48));
+	outtextxy(2 * (int)(SCREEN_W / 4), 5 * (int)(SCREEN_H / 6), (wchar_t)(((GAME_TIME - ((game.time_sec - game.time_begin))) / 10 )% 10  + 48));
+	outtextxy(2 * (int)(SCREEN_W / 4) + 15, 5 * (int)(SCREEN_H / 6), (wchar_t)((GAME_TIME - (game.time_sec - game.time_begin)) % 10 + 48));
 
 	//	Score
 	outtextxy((int)(SCREEN_W / 4), 3 * (int)(SCREEN_H / 4), _T("Score: "));
@@ -222,6 +253,12 @@ int game_status_single(GAME &game, int SCREEN_W, int SCREEN_H)
 	outtextxy((int)(SCREEN_W / 4) + 15, 5 * (int)(SCREEN_H / 6), (wchar_t)((game.score / 100) % 10 + 48));
 	outtextxy((int)(SCREEN_W / 4) + 30, 5 * (int)(SCREEN_H / 6), (wchar_t)((game.score / 10) % 10 + 48));
 	outtextxy((int)(SCREEN_W / 4) + 45, 5 * (int)(SCREEN_H / 6), (wchar_t)(game.score % 10 + 48));
+
+	//	Level
+	outtextxy(15, 3 * (int)(SCREEN_H / 4), _T("Lv: "));
+	outtextxy(30, 5 * (int)(SCREEN_H / 6), (wchar_t)(((int)(game.level / 10)) % 10 + 48));
+	outtextxy(45, 5 * (int)(SCREEN_H / 6), (wchar_t)((int)(game.score) % 10 + 48));
+	outtextxy(60, 5 * (int)(SCREEN_H / 6), (wchar_t)(((int)(game.score * 10)) % 10 + 48));
 
 	//-------------------Time Box-----------------------
 
@@ -292,15 +329,25 @@ int fish_judge(GAME &game, int SCREEN_W, int SCREEN_H)
 				p->y + ((p->level)* game.npc_fishes[p->res_num].getheight() / 2) <= game.mouse.y + (3 * game.level * game.npc_fishes[p->res_num].getheight() / 8) &&
 				p->y + ((p->level)* game.npc_fishes[p->res_num].getheight() / 2) >= game.mouse.y - (3 * game.level * game.npc_fishes[p->res_num].getheight() / 8)))
 		{
-			p = fish_rm(game, p);
-			// Reward to player
-			game.score++;
-			game.level += 0.01;
+			if (p->level > game.level && game.god == false)
+			{
+				if (game.score > 5) game.score -= 5;
+				game.level -= 0.05;
+				game.god = true;
+				return -1;
+			}
+			else
+			{
+				p = fish_rm(game, p);
+				// Reward to player
+				game.score++;
+				game.level += 0.01;
 
-			return 1;
+				return 1;
+			}
 		}
-		else if (p->x > SCREEN_W + ((p->level)* game.npc_fishes[p->res_num].getwidth() / 2) || p->x < -((p->level)* game.npc_fishes[p->res_num].getwidth() / 2) || 
-				p->y > SCREEN_H + p->y + ((p->level)* game.npc_fishes[p->res_num].getheight() / 2) || p->y < -p->y + ((p->level)* game.npc_fishes[p->res_num].getheight() / 2))
+		else if (p->x > SCREEN_W + ((p->level)* game.npc_fishes[p->res_num].getwidth()) || p->x < -((p->level)* game.npc_fishes[p->res_num].getwidth()) || 
+				p->y > SCREEN_H + p->y + ((p->level)* game.npc_fishes[p->res_num].getheight()) || p->y < -p->y  -((p->level)* game.npc_fishes[p->res_num].getheight()))
 		{
 			p = fish_rm(game, p);
 			return 1;
@@ -334,44 +381,15 @@ int fish_single(GAME &game, int SCREEN_W, int SCREEN_H)
 							tmp.getheight(),
 							0x000000);
 
-			if (p->x < 100)
+			if (p->flag == 2)
 			{
-				p->x += TIME * (rand() % 5) ;
+				p->x += TIME * (rand() % 20 / 10);
+				p->y += TIME * (rand() % 20 / 10) - 1;
 			}
-			else if (p->x > SCREEN_W - 100)
+			else if (p->flag == 1)
 			{
-				p->x -= TIME * (rand() % 5);
-			}
-			else
-			{
-				if (p->flag == 2)
-				{
-					p->x += TIME * (rand() % 20 / 10);
-				}
-				else if (p->flag == 1)
-				{
-					p->x -= TIME * (rand() % 20 / 10);
-				}
-			}
-
-			if (p->y <= 10)
-			{
-				p->y += TIME * 5;
-			}
-			else if (p->y >= 2 * SCREEN_H / 3)
-			{
-				p->y -= TIME * 10;
-			}
-			else
-			{
-				if (p->flag == 2)
-				{
-					p->y += TIME * (rand() % 20 / 10) - 1;
-				}
-				else if (p->flag == 1)
-				{
-					p->y -= TIME * (rand() % 20 / 10) - 1;
-				}
+				p->x -= TIME * (rand() % 20 / 10);
+				p->y -= TIME * (rand() % 20 / 10) - 1;
 			}
 		}
 
@@ -414,7 +432,7 @@ int fish_add(GAME &game, int num, int SCREEN_W, int SCREEN_H)
 		//	Intiating the fish object
 		//loadimage(&(_fish->img), _T("IMAGE"), _T("GAME_FISH_01"));
 		_fish->y = rand() % SCREEN_H;
-		_fish->level = rand() % 3 + 1 + game.score / 100;
+		_fish->level = rand() % 4 / 2.0 + game.level;
 		_fish->res_num = rand() % RES_FISHES;
 		if (rand() % 2)
 		{
