@@ -287,10 +287,10 @@ int fish_judge(GAME &game, int SCREEN_W, int SCREEN_H)
 	FISH *p, *p_t = NULL;
 	for (p = game.fish; p != NULL; p = p->next)
 	{
-		if	  ((p->x + ((p->level)* game.npc_fish.getwidth() / 2) <= game.mouse.x + (3 * game.level * game.player_fish.getwidth() / 8) &&
-				p->x + ((p->level)* game.npc_fish.getwidth() / 2) >= game.mouse.x - (3 * game.level * game.player_fish.getwidth() / 8) &&
-				p->y + ((p->level)* game.npc_fish.getheight() / 2) <= game.mouse.y + (3 * game.level * game.player_fish.getheight() / 8) &&
-				p->y + ((p->level)* game.npc_fish.getheight() / 2) >= game.mouse.y - (3 * game.level * game.player_fish.getheight() / 8)))
+		if	  ((p->x + ((p->level)* game.npc_fishes[p->res_num].getwidth() / 2) <= game.mouse.x + (3 * game.level * game.npc_fishes[p->res_num].getwidth() / 8) &&
+				p->x + ((p->level)* game.npc_fishes[p->res_num].getwidth() / 2) >= game.mouse.x - (3 * game.level * game.npc_fishes[p->res_num].getwidth() / 8) &&
+				p->y + ((p->level)* game.npc_fishes[p->res_num].getheight() / 2) <= game.mouse.y + (3 * game.level * game.npc_fishes[p->res_num].getheight() / 8) &&
+				p->y + ((p->level)* game.npc_fishes[p->res_num].getheight() / 2) >= game.mouse.y - (3 * game.level * game.npc_fishes[p->res_num].getheight() / 8)))
 		{
 			p = fish_rm(game, p);
 			// Reward to player
@@ -299,7 +299,8 @@ int fish_judge(GAME &game, int SCREEN_W, int SCREEN_H)
 
 			return 1;
 		}
-		else if (p->x > SCREEN_W + 100 || p->x < -100 || p->y > SCREEN_H + 100 || p->y < -100)
+		else if (p->x > SCREEN_W + ((p->level)* game.npc_fishes[p->res_num].getwidth() / 2) || p->x < -((p->level)* game.npc_fishes[p->res_num].getwidth() / 2) || 
+				p->y > SCREEN_H + p->y + ((p->level)* game.npc_fishes[p->res_num].getheight() / 2) || p->y < -p->y + ((p->level)* game.npc_fishes[p->res_num].getheight() / 2))
 		{
 			p = fish_rm(game, p);
 			return 1;
@@ -335,41 +336,41 @@ int fish_single(GAME &game, int SCREEN_W, int SCREEN_H)
 
 			if (p->x < 100)
 			{
-				p->x += rand() % 5 ;
+				p->x += TIME * (rand() % 5) ;
 			}
 			else if (p->x > SCREEN_W - 100)
 			{
-				p->x -= rand() % 5;
+				p->x -= TIME * (rand() % 5);
 			}
 			else
 			{
 				if (p->flag == 2)
 				{
-					p->x += rand() % 20 / 10;
+					p->x += TIME * (rand() % 20 / 10);
 				}
 				else if (p->flag == 1)
 				{
-					p->x -= rand() % 20 / 10;
+					p->x -= TIME * (rand() % 20 / 10);
 				}
 			}
 
 			if (p->y <= 10)
 			{
-				p->y += 5;
+				p->y += TIME * 5;
 			}
 			else if (p->y >= 2 * SCREEN_H / 3)
 			{
-				p->y -= 10;
+				p->y -= TIME * 10;
 			}
 			else
 			{
 				if (p->flag == 2)
 				{
-					p->y += rand() % 20 / 10 - 1;
+					p->y += TIME * (rand() % 20 / 10) - 1;
 				}
 				else if (p->flag == 1)
 				{
-					p->y -= rand() % 20 / 10 - 1;
+					p->y -= TIME * (rand() % 20 / 10) - 1;
 				}
 			}
 		}
@@ -417,12 +418,12 @@ int fish_add(GAME &game, int num, int SCREEN_W, int SCREEN_H)
 		_fish->res_num = rand() % RES_FISHES;
 		if (rand() % 2)
 		{
-			_fish->x = SCREEN_W;
+			_fish->x = SCREEN_W - game.level * game.npc_fishes[_fish->res_num].getwidth() / 4;
 			_fish->flag = 1;
 		}
 		else
 		{
-			_fish->x = 0;
+			_fish->x = -game.level * game.npc_fishes[_fish->res_num].getwidth() / 4;
 			_fish->flag = 2;
 		}
 	}

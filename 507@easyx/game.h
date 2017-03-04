@@ -10,10 +10,11 @@
 
 #define BUFFSIZE 		25
 #define RES_FISHES 		4
+#define TIME			3
 
 typedef struct fish
 {
-	//IMAGE img;
+	//IMAGE img[300];
 	float x;
 	float y;
 	float s_x;
