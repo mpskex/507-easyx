@@ -17,7 +17,7 @@
 
 typedef struct fish
 {
-	IMAGE img[300];
+	//IMAGE img[300];
 	float x;
 	float y;
 	float s_x;

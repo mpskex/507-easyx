@@ -374,8 +374,8 @@ int fish_single(GAME &game, int SCREEN_W, int SCREEN_H)
 			TransparentBlt(dstDC,
 							(int)(p->x),
 							(int)(p->y),
-							(p->level/2) * tmp.getwidth(),
-							(p->level/2) * tmp.getheight(),
+							(p->level) * tmp.getwidth(),
+							(p->level) * tmp.getheight(),
 							srcDC, 0, 0,
 							tmp.getwidth(),
 							tmp.getheight(),
@@ -432,7 +432,7 @@ int fish_add(GAME &game, int num, int SCREEN_W, int SCREEN_H)
 		//	Intiating the fish object
 		//loadimage(&(_fish->img), _T("IMAGE"), _T("GAME_FISH_01"));
 		_fish->y = rand() % SCREEN_H;
-		_fish->level = rand() % 4 / 2.0 + game.level;
+		_fish->level = rand() % 4 / 2.0 + game.level - 0.5;
 		_fish->res_num = rand() % RES_FISHES;
 		if (rand() % 2)
 		{
