@@ -8,12 +8,32 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+//	DEBUG SWITCH
+//------MOVE-----
+//#define POS_RAND
+#define SPD_RAND
+//---------------
+//------VER------
+#define SHOW_VER
+//---------------
+
+#ifdef SPD_RAND
+	#define SPD_MAX			5
+	#define SPD_MAX_X		5
+	#define SPD_MAX_Y		5
+	#define SPD_DEC			0.05
+	#define SPD_MIN			0.3
+	#define SPD_RATIO		3
+	#define SPD_INIT_RAND_Y	
+#endif
+
 #define BUFFSIZE 		25
 #define RES_FISHES 		4
 #define TIME			3
 #define GAME_TIME		99
-#define GOD_TIME		100
-#define FISH_QUAT		10
+#define GOD_TIME		50
+#define FISH_FREQ		50		// Bigger is less
+#define FISH_QUAT		2
 
 typedef struct fish
 {
@@ -58,7 +78,9 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H);
 int game_status_single(GAME &game, int SCREEN_W, int SCREEN_H);
 int game_background_single(GAME &game, int SCREEN_W, int SCRREN_H);
 int game_player_single(GAME &game, int SCREEN_W, int SCREEN_H);
+int game_score(GAME &game, int SCREEN_W, int SCREEN_H);
 
+DWORD WINAPI game_lock_frame();
 
 int fish_init(GAME &game, int SCREEN_W, int SCREEN_H);
 int fish_add(GAME &game, int num, int SCREEN_W, int SCREEN_H);

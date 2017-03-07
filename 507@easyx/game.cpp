@@ -89,6 +89,13 @@ int name_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 		}
 	}
 }
+
+DWORD WINAPI game_lock_frame(LPVOID pM)
+{
+	Sleep(10);
+	return 0;
+}
+
 int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 {
 	clearcliprgn();
@@ -100,7 +107,7 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 	game.mouse.y = SCREEN_H / 2;
 
 	srand((unsigned)time(NULL));
-	game.time_begin = time(NULL);
+	game.time_begin = (unsigned)time(NULL);
 	//fish_add(game, 1000, SCREEN_W, 3*(int)(SCREEN_H / 4));
 
 	RECT title_rect = { 0, 0, SCREEN_W, 3 * SCREEN_H / 4 };
@@ -108,8 +115,10 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 	Sleep(5);
 	while (1)
 	{
+		HANDLE handle = CreateThread(NULL, 0, game_lock_frame, NULL, 0, NULL);
+
 		if (game.fish == NULL) fish_init(game, SCREEN_W, SCREEN_H);
-		if (freq % FISH_QUAT == 0)fish_add(game, 2, SCREEN_W, 3 * (int)(SCREEN_H / 4));
+		if (freq % FISH_FREQ == 0)fish_add(game, FISH_QUAT, SCREEN_W, 3 * (int)(SCREEN_H / 4));
 		if (MouseHit())
 		{
 			game.mouse = GetMouseMsg();
@@ -188,6 +197,7 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 		//Sleep(5);
 		FlushBatchDraw();
 		//FlushMouseMsgBuffer();
+		WaitForSingleObject(handle, INFINITE);
 		clearcliprgn();
 	}
 }
@@ -212,6 +222,7 @@ int game_main(GAME &game, int SCREEN_W, int SCREEN_H)
 	if (_return == 0)
 	{
 		game_loop(game, SCREEN_W, SCREEN_H);
+		game_score(game, SCREEN_W, SCREEN_H);
 		return 0;
 	}
 	else
@@ -242,7 +253,7 @@ int game_status_single(GAME &game, int SCREEN_W, int SCREEN_H)
 	// This function need restruct with drawtext();
 
 	//	Timer
-	game.time_sec = time(NULL);
+	game.time_sec = (unsigned)time(NULL);
 	outtextxy(2 * (int)(SCREEN_W / 4), 3 * (int)(SCREEN_H / 4), _T("Time: "));
 	outtextxy(2 * (int)(SCREEN_W / 4), 5 * (int)(SCREEN_H / 6), (wchar_t)(((GAME_TIME - ((game.time_sec - game.time_begin))) / 10 )% 10  + 48));
 	outtextxy(2 * (int)(SCREEN_W / 4) + 15, 5 * (int)(SCREEN_H / 6), (wchar_t)((GAME_TIME - (game.time_sec - game.time_begin)) % 10 + 48));
@@ -332,7 +343,7 @@ int fish_judge(GAME &game, int SCREEN_W, int SCREEN_H)
 			if (p->level > game.level && game.god == false)
 			{
 				if (game.score > 5) game.score -= 5;
-				game.level -= 0.05;
+				game.level -= (float)0.05;
 				game.god = true;
 				return -1;
 			}
@@ -341,7 +352,7 @@ int fish_judge(GAME &game, int SCREEN_W, int SCREEN_H)
 				p = fish_rm(game, p);
 				// Reward to player
 				game.score++;
-				game.level += 0.01;
+				game.level += (float)0.01;
 
 				return 1;
 			}
@@ -381,6 +392,54 @@ int fish_single(GAME &game, int SCREEN_W, int SCREEN_H)
 							tmp.getheight(),
 							0x000000);
 
+#ifdef SPD_RAND
+			p->y += p->s_y;
+			if (p->flag == 1)
+			{
+				p->x -= p->s_x;
+				if (p->s_x <= 0)
+				{
+					p->s_x += rand() % (SPD_MAX_X + 1) / SPD_RATIO;
+				}
+				else
+				{
+					p->s_x -= SPD_DEC / SPD_RATIO;
+				}
+			}
+			else if (p->flag == 2)
+			{
+				p->x += p->s_x;
+				if (p->s_x <= 0)
+				{
+					p->s_x += rand() % (SPD_MAX_X + 1) / SPD_RATIO;
+				}
+				else
+				{
+					p->s_x -= SPD_DEC / SPD_RATIO;
+				}
+			}
+			if (p->s_y > SPD_MIN)
+			{
+				p->s_y -= SPD_DEC / SPD_RATIO;
+			}
+			else if (p->s_y < -SPD_MIN)
+			{	
+				p->s_y += SPD_DEC / SPD_RATIO;
+			}
+			else
+			{
+				if (rand() % 2) 
+				{
+					p->s_y = -(rand() % SPD_MAX_Y) / SPD_RATIO;
+				}
+				else
+				{
+					p->s_y = (rand() % SPD_MAX_Y) / SPD_RATIO;
+				}
+			}
+#endif
+
+#ifdef POS_RAND
 			if (p->flag == 2)
 			{
 				p->x += TIME * (rand() % 20 / 10);
@@ -391,6 +450,7 @@ int fish_single(GAME &game, int SCREEN_W, int SCREEN_H)
 				p->x -= TIME * (rand() % 20 / 10);
 				p->y -= TIME * (rand() % 20 / 10) - 1;
 			}
+#endif
 		}
 
 	}
@@ -401,11 +461,25 @@ int fish_single(GAME &game, int SCREEN_W, int SCREEN_H)
 int fish_init(GAME &game, int SCREEN_W, int SCREEN_H)
 {
 	game.fish = (FISH*)malloc(sizeof(FISH));
-	game.fish->next = NULL;
-	game.fish->y = rand() % SCREEN_H;
+	game.fish->s_x = 0;
+#ifndef SPD_INIT_RAND_Y
+	game.fish->s_y = 0;
+#endif
+#ifdef SPD_INIT_RAND_Y
 	if (rand() % 2)
 	{
-		game.fish->x = SCREEN_W;
+		game.fish->s_y = (rand() % SPD_MAX_Y) / 2;
+	}
+	else
+	{
+		game.fish->s_y = -(rand() % SPD_MAX_Y) / 2;
+	}
+#endif
+	game.fish->next = NULL;
+	game.fish->y = (int)rand() % SCREEN_H;
+	if (rand() % 2)
+	{
+		game.fish->x = (int)SCREEN_W;
 	}
 	else
 	{
@@ -430,9 +504,22 @@ int fish_add(GAME &game, int num, int SCREEN_W, int SCREEN_H)
 		_fish->next = NULL;
 		temp = _fish;
 		//	Intiating the fish object
-		//loadimage(&(_fish->img), _T("IMAGE"), _T("GAME_FISH_01"));
-		_fish->y = rand() % SCREEN_H;
-		_fish->level = rand() % 4 / 2.0 + game.level - 0.5;
+		_fish->s_x = 0;
+#ifndef SPD_INIT_RAND_Y
+		_fish->s_y = 0;
+#endif
+#ifdef SPD_INIT_RAND_Y
+		if (rand() % 2)
+		{
+			_fish->s_y = (rand() % SPD_MAX_Y) / 2;
+		}
+		else
+		{
+			_fish->s_y = -(rand() % SPD_MAX_Y) / 2;
+		}
+#endif
+		_fish->y = (int)rand() % SCREEN_H;
+		_fish->level = rand() % 4 / 2 + game.level - 0.5;
 		_fish->res_num = rand() % RES_FISHES;
 		if (rand() % 2)
 		{
@@ -494,8 +581,26 @@ int res_fishes_load(GAME &game)
 	return 0;
 }
 
-int res_fishes_clear(GAME &game)
+int game_score(GAME &game, int SCREEN_W, int SCREEN_H)
 {
-
-	return 0;
+	Sleep(50);
+	RECT title_rect = { 0, 0, SCREEN_W, 3 * SCREEN_H / 4 };
+	clearcliprgn();
+	BeginBatchDraw();
+	settextstyle(72, 0, _T("SYSTEM"));
+	outtextxy((int)(SCREEN_W / 4), (int)(SCREEN_H / 4), _T("Score: "));
+	outtextxy((int)(SCREEN_W / 4), (int)(SCREEN_H / 4) + 100, (wchar_t)((game.score / 1000) % 10 + 48));
+	outtextxy((int)(SCREEN_W / 4) + 50, (int)(SCREEN_H / 4) + 100, (wchar_t)((game.score / 100) % 10 + 48));
+	outtextxy((int)(SCREEN_W / 4) + 100, (int)(SCREEN_H / 4) + 100, (wchar_t)((game.score / 10) % 10 + 48));
+	outtextxy((int)(SCREEN_W / 4) + 150, (int)(SCREEN_H / 4) + 100, (wchar_t)(game.score % 10 + 48));
+	FlushBatchDraw();
+	while (true)
+	{
+		if ((GetAsyncKeyState(VK_ESCAPE) & 1) || (GetAsyncKeyState(VK_RETURN) & 1))
+		{
+			_getch();
+			Sleep(50);
+			return 0;
+		}
+	}
 }
