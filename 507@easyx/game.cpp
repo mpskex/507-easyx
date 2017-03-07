@@ -7,7 +7,6 @@ int name_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 	int pos = 0;
 	game.player = (wchar_t *)malloc(BUFFSIZE * sizeof(wchar_t));
 	wchar_t ch;
-	//game.player = (wchar_t*)calloc(BUFFSIZE, sizeof(wchar_t));
 	int i;
 	for (i = 0; i < BUFFSIZE; i++)
 	{
@@ -92,7 +91,7 @@ int name_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 
 DWORD WINAPI game_lock_frame(LPVOID pM)
 {
-	Sleep(10);
+	Sleep(LOCK_RATE);
 	return 0;
 }
 
@@ -102,6 +101,7 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 	float level = 0;
 	int freq = 0;
 	int god_count = 0;
+	HANDLE handle = NULL;
 	game.god = false;
 	game.mouse.x = SCREEN_W / 2;
 	game.mouse.y = SCREEN_H / 2;
@@ -115,7 +115,7 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 	Sleep(5);
 	while (1)
 	{
-		HANDLE handle = CreateThread(NULL, 0, game_lock_frame, NULL, 0, NULL);
+		handle = CreateThread(NULL, 0, game_lock_frame, NULL, 0, NULL);
 
 		if (game.fish == NULL) fish_init(game, SCREEN_W, SCREEN_H);
 		if (freq % FISH_FREQ == 0)fish_add(game, FISH_QUAT, SCREEN_W, 3 * (int)(SCREEN_H / 4));
@@ -197,7 +197,7 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 		//Sleep(5);
 		FlushBatchDraw();
 		//FlushMouseMsgBuffer();
-		WaitForSingleObject(handle, INFINITE);
+		WaitForSingleObject(handle, LOCK_RATE + 2);
 		clearcliprgn();
 	}
 }
@@ -214,7 +214,6 @@ int game_main(GAME &game, int SCREEN_W, int SCREEN_H)
 	loadimage(&game.npc_fishes[3], _T("IMAGE"), _T("GAME_FISH_04"));
 
 	loadimage(&(game.player_fish), _T("IMAGE"), _T("GAME_FISH_PLAYER"));
-	loadimage(&(game.npc_fish), _T("IMAGE"), _T("GAME_FISH_01"));
 	loadimage(&game.background, _T("IMAGE"), _T("GAME_BACKGROUND"));
 
 

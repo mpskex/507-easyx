@@ -10,60 +10,61 @@
 
 //	DEBUG SWITCH
 //------MOVE-----
-//#define POS_RAND
-#define SPD_RAND
+//#define POS_RAND		//	NPC_Moving mode (position based)
+#define SPD_RAND		//	NPC_Moving mode (speed based)
 //---------------
 //------VER------
-#define SHOW_VER
+#define SHOW_VER		//	Show the Version Information(for Debug)
 //---------------
 
 #ifdef SPD_RAND
 	#define SPD_MAX			5
-	#define SPD_MAX_X		5
-	#define SPD_MAX_Y		5
-	#define SPD_DEC			0.05
-	#define SPD_MIN			0.3
-	#define SPD_RATIO		3
+	#define SPD_MAX_X		5			//	Maxium Speed in X axis
+	#define SPD_MAX_Y		5			//	Maxium Speed in Y axis
+	#define SPD_DEC			0.05		//	Step value (Constant accelerate rate in abstract game time)
+	#define SPD_MIN			0.3			//	Minimal Speed
+	#define SPD_RATIO		1			//	Time Ratio (to enbalance the difficulty)
 	#define SPD_INIT_RAND_Y	
 #endif
 
-#define BUFFSIZE 		25
-#define RES_FISHES 		4
+#define BUFFSIZE 		25		//	buffsize for string
+#define RES_FISHES 		4		//	Amount of the npc fishes
 #define TIME			3
-#define GAME_TIME		99
-#define GOD_TIME		50
-#define FISH_FREQ		50		// Bigger is less
-#define FISH_QUAT		2
+#define GAME_TIME		99		//	sec
+#define LOCK_RATE		10		//	ms
+#define GOD_TIME		50		//	ms
+#define FISH_FREQ		10		//	Triggered every XX ms
+#define FISH_QUAT		2		//	Push XX fishes every time
 
 typedef struct fish
 {
 	//IMAGE img[300];
-	float x;
-	float y;
-	float s_x;
-	float s_y;
-	float level;
+	float x;				//	Node fish's position in X
+	float y;				//	Node fish's position in Y
+	float s_x;				//	Node fish's speed in X
+	float s_y;				//	Node fish's speed in Y
+	float level;			//	Node fish's level(judge score or hurt)
 
-	int res_num;
-	int flag;
-	fish *next;
+	int res_num;			//	Alternate texture amount
+	int flag;				//	From Left or Right
+	fish *next;				//	Pointer to next
 }FISH;
 
 typedef struct game
 {
-	wchar_t		*player;
-	int			time_begin, time_sec;
-	int			score = 0;
-	bool		god;
-	float			level;
+	wchar_t		*player;					//	Player's name
+	int			time_begin, time_sec;		//	Timer for count Game time
+	int			score = 0;					//	Score
+	bool		god;						//	GOD Flag
+	float		level;						//	Player's level
 
-	MOUSEMSG	mouse;
+	MOUSEMSG	mouse;						//	Mouse Message
 
-	IMAGE		npc_fish;
-	IMAGE		npc_fishes[RES_FISHES];
-	IMAGE		player_fish;
-	IMAGE		background;
-	FISH		*fish = NULL;
+	//IMAGE		npc_fish;					
+	IMAGE		npc_fishes[RES_FISHES];		//	NPC Texture Array
+	IMAGE		player_fish;				//	Player's fish texture
+	IMAGE		background;					//	Background Texture
+	FISH		*fish = NULL;				//	Head of NPC chain list
 }GAME;
 
 //	Game main
@@ -82,6 +83,7 @@ int game_score(GAME &game, int SCREEN_W, int SCREEN_H);
 
 DWORD WINAPI game_lock_frame();
 
+//	Functions control fishes
 int fish_init(GAME &game, int SCREEN_W, int SCREEN_H);
 int fish_add(GAME &game, int num, int SCREEN_W, int SCREEN_H);
 int fish_judge(GAME &game, int SCREEN_W, int SCREEN_H);
