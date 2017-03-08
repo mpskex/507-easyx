@@ -31,6 +31,7 @@ int main(void)
 	clearcliprgn();
 	// assign space for the Menu struct
 	MENU menu;
+	PlaySound((LPCTSTR)IDR_WAVE2, NULL, SND_ASYNC | SND_RESOURCE | SND_LOOP);
 	// Into the main loop
 	while (1)
 	{ 

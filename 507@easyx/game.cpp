@@ -1,6 +1,6 @@
 #include <game.h>
-
 #define DEBUG
+#pragma comment(lib, "winmm.lib")
 
 int name_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 {
@@ -206,7 +206,6 @@ int game_main(GAME &game, int SCREEN_W, int SCREEN_H)
 	int _return = 0;
 	// Intiate the game data
 	game.level = 1.0;
-
 	loadimage(&game.npc_fishes[0], _T("IMAGE"), _T("GAME_FISH_01"));
 	loadimage(&game.npc_fishes[1], _T("IMAGE"), _T("GAME_FISH_02"));
 	loadimage(&game.npc_fishes[2], _T("IMAGE"), _T("GAME_FISH_03"));
@@ -214,8 +213,7 @@ int game_main(GAME &game, int SCREEN_W, int SCREEN_H)
 
 	loadimage(&(game.player_fish), _T("IMAGE"), _T("GAME_FISH_PLAYER"));
 	loadimage(&game.background, _T("IMAGE"), _T("GAME_BACKGROUND"));
-
-
+	//PlaySound((LPCTSTR)IDR_WAVE2, NULL, SND_ASYNC | SND_RESOURCE | SND_LOOP);
 	_return = name_loop(game, SCREEN_W, SCREEN_H);
 	if (_return == 0)
 	{

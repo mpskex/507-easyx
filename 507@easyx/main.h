@@ -4,6 +4,8 @@
 #include <conio.h>
 #include <windows.h>
 
+#include <resource.h>
+
 #include <about.h>
 #include <menu.h>
 #include <intro.h>

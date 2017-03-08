@@ -182,6 +182,8 @@
     <Image Include="..\..\507%40easyx\res\game_background.bmp" />
     <Image Include="..\..\507%40easyx\res\game_fish_01.bmp" />
     <Image Include="..\..\507%40easyx\res\game_fish_02.bmp" />
+    <Image Include="..\..\507%40easyx\res\game_fish_03.bmp" />
+    <Image Include="..\..\507%40easyx\res\game_fish_04.bmp" />
     <Image Include="..\..\507%40easyx\res\game_fish_player.bmp" />
     <Image Include="..\..\507%40easyx\res\icon.ico" />
     <Image Include="..\..\507%40easyx\res\intro.jpg" />
@@ -189,6 +191,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\507%40easyx\readme.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\..\507%40easyx\res\battle_BGM%40DDBY.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

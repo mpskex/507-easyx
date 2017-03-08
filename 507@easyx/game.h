@@ -8,24 +8,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-//	DEBUG SWITCH
-//------MOVE-----
-//#define POS_RAND		//	NPC_Moving mode (position based)
-#define SPD_RAND		//	NPC_Moving mode (speed based)
-//---------------
-//------VER------
-#define SHOW_VER		//	Show the Version Information(for Debug)
-//---------------
 
-#ifdef SPD_RAND
-	#define SPD_MAX			5
-	#define SPD_MAX_X		5			//	Maxium Speed in X axis
-	#define SPD_MAX_Y		5			//	Maxium Speed in Y axis
-	#define SPD_DEC			0.05		//	Step value (Constant accelerate rate in abstract game time)
-	#define SPD_MIN			0.3			//	Minimal Speed
-	#define SPD_RATIO		1			//	Time Ratio (to enbalance the difficulty)
-	#define SPD_INIT_RAND_Y	
-#endif
+#define SPD_MAX_X		5			//	Maxium Speed in X axis
+#define SPD_MAX_Y		5			//	Maxium Speed in Y axis
+#define SPD_DEC			0.05		//	Step value (Constant accelerate rate in abstract game time)
+#define SPD_MIN			0.3			//	Minimal Speed
+#define SPD_RATIO		1			//	Time Ratio (to enbalance the difficulty)
+#define SPD_INIT_RAND_Y	
+
 
 #define BUFFSIZE 		25		//	buffsize for string
 #define RES_FISHES 		4		//	Amount of the npc fishes
