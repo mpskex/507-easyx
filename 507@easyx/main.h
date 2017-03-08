@@ -9,6 +9,7 @@
 #include <intro.h>
 #include <game.h>
 #include <option.h>
+#include <file_operator.h>
 
 #define NAMEBUFF 25
 

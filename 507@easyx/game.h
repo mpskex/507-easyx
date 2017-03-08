@@ -52,6 +52,12 @@ typedef struct fish
 
 typedef struct game
 {
+	//	mode 0 for rand position based
+	//	mode 1 for rand speed based
+	//	other is for rand speed without y
+	int			mode = 2;
+	int			speed_ratio = 1;
+
 	wchar_t		*player;					//	Player's name
 	int			time_begin, time_sec;		//	Timer for count Game time
 	int			score = 0;					//	Score
@@ -59,8 +65,7 @@ typedef struct game
 	float		level;						//	Player's level
 
 	MOUSEMSG	mouse;						//	Mouse Message
-
-	//IMAGE		npc_fish;					
+				
 	IMAGE		npc_fishes[RES_FISHES];		//	NPC Texture Array
 	IMAGE		player_fish;				//	Player's fish texture
 	IMAGE		background;					//	Background Texture

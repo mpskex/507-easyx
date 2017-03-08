@@ -9,8 +9,11 @@
 
 int main(void)
 {
+	SETTING setting;
+	init_setting(setting);
+	load_setting(setting);
 	// Define the Screen's Width and Height
-	int SCREEN_W = 1024, SCREEN_H = 576;
+	int SCREEN_W = setting.SCREEN_W, SCREEN_H = setting.SCREEN_H;
 	initgraph(SCREEN_W, SCREEN_H);
 	/* This part only be compiled in alpha or released version */
 #ifdef ALPHA
@@ -40,7 +43,10 @@ int main(void)
 		// New game
 		case MENU_NEWGAME:
 		{
+			load_setting(setting);
 			GAME game;
+			game.mode = setting.mode;
+			game.speed_ratio = setting.speed_ratio;
 			// Initiate the object resources
 			clearcliprgn();
 			game_main(game, SCREEN_W, SCREEN_H);
@@ -50,6 +56,7 @@ int main(void)
 		case MENU_OPTION:
 		{
 			OPTION option;
+			option.setting = setting;
 			option_loop(option, SCREEN_W, SCREEN_H);
 			break;
 		}

@@ -4,7 +4,7 @@
 #include <conio.h>
 
 #include <button.h>
-
+#include <file_operator.h>
 #define DEV				"DEBUG"
 #define VERSION			"0.8.2"
 
@@ -26,6 +26,7 @@ typedef struct menu
 {
 	int select;
 	IMAGE bk;
+	MOUSEMSG mouse;
 } MENU;
 
 int menu_loop(MENU &menu, int SCREEN_W, int SCREEN_H);

@@ -4,8 +4,8 @@
 #include <graphics.h>
 
 #include <button.h>
-
-#include<math.h>
+#include <file_operator.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -23,7 +23,7 @@
 
 typedef struct option
 {
-
+	SETTING setting;
 }OPTION;
 
 int option_loop(OPTION option, int SCREEN_W, int SCREEN_H);

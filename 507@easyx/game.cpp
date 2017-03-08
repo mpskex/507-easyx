@@ -101,7 +101,7 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 	float level = 0;
 	int freq = 0;
 	int god_count = 0;
-	HANDLE handle = NULL;
+	HANDLE wait = NULL;
 	game.god = false;
 	game.mouse.x = SCREEN_W / 2;
 	game.mouse.y = SCREEN_H / 2;
@@ -112,10 +112,9 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 
 	RECT title_rect = { 0, 0, SCREEN_W, 3 * SCREEN_H / 4 };
 	FlushMouseMsgBuffer();
-	Sleep(5);
 	while (1)
 	{
-		handle = CreateThread(NULL, 0, game_lock_frame, NULL, 0, NULL);
+		wait = CreateThread(NULL, 0, game_lock_frame, NULL, 0, NULL);
 
 		if (game.fish == NULL) fish_init(game, SCREEN_W, SCREEN_H);
 		if (freq % FISH_FREQ == 0)fish_add(game, FISH_QUAT, SCREEN_W, 3 * (int)(SCREEN_H / 4));
@@ -194,10 +193,10 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 		freq++;
 		// Clear the input buffer
 		if (_kbhit()) _getch();
-		//Sleep(5);
+		//Sleep(10);
 		FlushBatchDraw();
 		//FlushMouseMsgBuffer();
-		WaitForSingleObject(handle, LOCK_RATE + 2);
+		WaitForSingleObject(wait, LOCK_RATE + 2);
 		clearcliprgn();
 	}
 }
@@ -266,9 +265,9 @@ int game_status_single(GAME &game, int SCREEN_W, int SCREEN_H)
 
 	//	Level
 	outtextxy(15, 3 * (int)(SCREEN_H / 4), _T("Lv: "));
-	outtextxy(30, 5 * (int)(SCREEN_H / 6), (wchar_t)(((int)(game.level / 10)) % 10 + 48));
-	outtextxy(45, 5 * (int)(SCREEN_H / 6), (wchar_t)((int)(game.score) % 10 + 48));
-	outtextxy(60, 5 * (int)(SCREEN_H / 6), (wchar_t)(((int)(game.score * 10)) % 10 + 48));
+	outtextxy(30, 5 * (int)(SCREEN_H / 6), (wchar_t)(((int)(game.level - 1)) % 10 + 48));
+	outtextxy(45, 5 * (int)(SCREEN_H / 6), (wchar_t)((int)((game.level - 1) * 10) % 10 + 48));
+	outtextxy(60, 5 * (int)(SCREEN_H / 6), (wchar_t)(((int)((game.level - 1) * 100)) % 10 + 48));
 
 	//-------------------Time Box-----------------------
 
@@ -390,66 +389,70 @@ int fish_single(GAME &game, int SCREEN_W, int SCREEN_H)
 							tmp.getwidth(),
 							tmp.getheight(),
 							0x000000);
-
-#ifdef SPD_RAND
-			p->y += p->s_y;
-			if (p->flag == 1)
+			//	Difficulty associated
+			if (game.mode != 0)
 			{
-				p->x -= p->s_x;
-				if (p->s_x <= 0)
+				p->y += p->s_y;
+				if (p->flag == 1)
 				{
-					p->s_x += rand() % (SPD_MAX_X + 1) / SPD_RATIO;
+					p->x -= p->s_x;
+					if (p->s_x <= 0)
+					{
+						p->s_x += rand() % (SPD_MAX_X + 1) / ((float)game.speed_ratio / 10);
+					}
+					else
+					{
+						p->s_x -= SPD_DEC / ((float)game.speed_ratio / 10);
+					}
 				}
-				else
+				else if (p->flag == 2)
 				{
-					p->s_x -= SPD_DEC / SPD_RATIO;
+					p->x += p->s_x;
+					if (p->s_x <= 0)
+					{
+						p->s_x += rand() % (SPD_MAX_X + 1) / ((float)game.speed_ratio / 10);
+					}
+					else
+					{
+						p->s_x -= SPD_DEC / ((float)game.speed_ratio / 10);
+					}
 				}
-			}
-			else if (p->flag == 2)
-			{
-				p->x += p->s_x;
-				if (p->s_x <= 0)
+				if (game.mode == 1)
 				{
-					p->s_x += rand() % (SPD_MAX_X + 1) / SPD_RATIO;
+					if (p->s_y > SPD_MIN)
+					{
+						p->s_y -= SPD_DEC / ((float)game.speed_ratio / 10);
+					}
+					else if (p->s_y < -SPD_MIN)
+					{
+						p->s_y += SPD_DEC / ((float)game.speed_ratio / 10);
+					}
+					else
+					{
+						if (rand() % 2)
+						{
+							p->s_y = -(rand() % SPD_MAX_Y) / ((float)game.speed_ratio / 10);
+						}
+						else
+						{
+							p->s_y = (rand() % SPD_MAX_Y) / ((float)game.speed_ratio / 10);
+						}
+					}
 				}
-				else
-				{
-					p->s_x -= SPD_DEC / SPD_RATIO;
-				}
-			}
-			if (p->s_y > SPD_MIN)
-			{
-				p->s_y -= SPD_DEC / SPD_RATIO;
-			}
-			else if (p->s_y < -SPD_MIN)
-			{	
-				p->s_y += SPD_DEC / SPD_RATIO;
 			}
 			else
 			{
-				if (rand() % 2) 
+				if (p->flag == 2)
 				{
-					p->s_y = -(rand() % SPD_MAX_Y) / SPD_RATIO;
+					p->x += TIME * (rand() % 20 / 10);
+					p->y += TIME * (rand() % 20 / 10) - 1;
 				}
-				else
+				else if (p->flag == 1)
 				{
-					p->s_y = (rand() % SPD_MAX_Y) / SPD_RATIO;
+					p->x -= TIME * (rand() % 20 / 10);
+					p->y -= TIME * (rand() % 20 / 10) - 1;
 				}
 			}
-#endif
-
-#ifdef POS_RAND
-			if (p->flag == 2)
-			{
-				p->x += TIME * (rand() % 20 / 10);
-				p->y += TIME * (rand() % 20 / 10) - 1;
-			}
-			else if (p->flag == 1)
-			{
-				p->x -= TIME * (rand() % 20 / 10);
-				p->y -= TIME * (rand() % 20 / 10) - 1;
-			}
-#endif
 		}
 
 	}
@@ -461,10 +464,6 @@ int fish_init(GAME &game, int SCREEN_W, int SCREEN_H)
 {
 	game.fish = (FISH*)malloc(sizeof(FISH));
 	game.fish->s_x = 0;
-#ifndef SPD_INIT_RAND_Y
-	game.fish->s_y = 0;
-#endif
-#ifdef SPD_INIT_RAND_Y
 	if (rand() % 2)
 	{
 		game.fish->s_y = (rand() % SPD_MAX_Y) / 2;
@@ -473,7 +472,6 @@ int fish_init(GAME &game, int SCREEN_W, int SCREEN_H)
 	{
 		game.fish->s_y = -(rand() % SPD_MAX_Y) / 2;
 	}
-#endif
 	game.fish->next = NULL;
 	game.fish->y = (int)rand() % SCREEN_H;
 	if (rand() % 2)
@@ -504,10 +502,6 @@ int fish_add(GAME &game, int num, int SCREEN_W, int SCREEN_H)
 		temp = _fish;
 		//	Intiating the fish object
 		_fish->s_x = 0;
-#ifndef SPD_INIT_RAND_Y
-		_fish->s_y = 0;
-#endif
-#ifdef SPD_INIT_RAND_Y
 		if (rand() % 2)
 		{
 			_fish->s_y = (rand() % SPD_MAX_Y) / 2;
@@ -516,7 +510,6 @@ int fish_add(GAME &game, int num, int SCREEN_W, int SCREEN_H)
 		{
 			_fish->s_y = -(rand() % SPD_MAX_Y) / 2;
 		}
-#endif
 		_fish->y = (int)rand() % SCREEN_H;
 		_fish->level = rand() % 4 / 2 + game.level - 0.5;
 		_fish->res_num = rand() % RES_FISHES;

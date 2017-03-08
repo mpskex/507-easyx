@@ -188,6 +188,17 @@ int option_loop(OPTION option, int SCREEN_W, int SCREEN_H)
 		}
 		case KEY_ENTER:
 		{
+			switch (cursor)
+			{
+			case OPTION_640:	option.setting.SCREEN_W = 640;	option.setting.SCREEN_H = 480; break;
+			case OPTION_800:	option.setting.SCREEN_W = 800;	option.setting.SCREEN_H = 600; break;
+			case OPTION_1024:	option.setting.SCREEN_W = 1024; option.setting.SCREEN_H = 576; break;
+			case OPTION_EASY:	option.setting.mode = 2; option.setting.speed_ratio = 20; break;
+			case OPTION_MEDUIM: option.setting.mode = 2; option.setting.speed_ratio = 10; break;
+			case OPTION_HARD:	option.setting.mode = 1; option.setting.speed_ratio = 10; break;
+			case OPTION_EXTREM:	option.setting.mode = 1; option.setting.speed_ratio = 5; break;
+			}
+			write_setting(option.setting); break;
 			return 2;
 			break;
 		}
