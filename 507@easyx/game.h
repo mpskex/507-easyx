@@ -14,6 +14,8 @@
 #define SPD_DEC			0.05		//	Step value (Constant accelerate rate in abstract game time)
 #define SPD_MIN			0.3			//	Minimal Speed
 #define SPD_RATIO		1			//	Time Ratio (to enbalance the difficulty)
+#define SPD_CHASE		0.2			//	Ratio describing the chasing speed
+#define SPD_EVADE		0.1			//	Ratio describing the evading speed
 #define SPD_INIT_RAND_Y	
 
 
@@ -28,7 +30,6 @@
 
 typedef struct fish
 {
-	//IMAGE img[300];
 	float x;				//	Node fish's position in X
 	float y;				//	Node fish's position in Y
 	float s_x;				//	Node fish's speed in X

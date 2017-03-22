@@ -1,6 +1,7 @@
 #pragma once
 #include <stdio.h>
-
+//	Setting :
+//	SCREEN_W	SCREEN_H	mode	speed_ratio
 typedef struct Save
 {
 	FILE *file;

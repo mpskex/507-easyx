@@ -436,6 +436,34 @@ int fish_single(GAME &game, int SCREEN_W, int SCREEN_H)
 							p->s_y = (rand() % SPD_MAX_Y) / ((float)game.speed_ratio / 10);
 						}
 					}
+				}/*
+				if (((game.mouse.x - p->x) > 1 || (game.mouse.x - p->x) < -1)
+					&& ((game.mouse.y - p->y) > 1 || (game.mouse.y - p->y) < -1))
+				{
+					p->s_x += SPD_CHASE * 10 / (0.7*(game.mouse.x - p->x));
+					p->s_y += SPD_CHASE * 10 / (0.7*(game.mouse.y - p->y));
+				}
+				 */
+				//if (game.mode == 2)
+				{
+					
+					if (p->level > game.level)
+					{
+						p->s_x += SPD_CHASE * 0.001 * (game.mouse.x - p->x);
+						p->s_y += SPD_CHASE * 0.001 * (game.mouse.y - p->y);
+					}
+					
+					if (p->level <= game.level)
+					{
+						if ((game.mouse.x - p->x) > game.player_fish.getwidth() / 2 + 10 || (game.mouse.x - p->x) < -game.player_fish.getwidth() / 2 - 10)
+							p->s_x -= SPD_EVADE * 15 / (2 * (game.mouse.x - p->x));
+						else
+							p->s_x -= SPD_EVADE * 15 / (game.player_fish.getwidth());
+						if ((game.mouse.y - p->y) > game.player_fish.getheight() / 2 + 10 || (game.mouse.y - p->y) < -game.player_fish.getheight() / 2 - 10)
+							p->s_y -= SPD_EVADE * 15 / (2 * (game.mouse.y - p->y));
+						else
+							p->s_y -= SPD_EVADE * 15 / (game.player_fish.getheight());
+					}
 				}
 			}
 			else
@@ -509,7 +537,7 @@ int fish_add(GAME &game, int num, int SCREEN_W, int SCREEN_H)
 			_fish->s_y = -(rand() % SPD_MAX_Y) / 2;
 		}
 		_fish->y = (int)rand() % SCREEN_H;
-		_fish->level = rand() % 4 / 2 + game.level - 0.5;
+		_fish->level = rand() % 10 / 7 + game.level - (0.5 / game.level);
 		_fish->res_num = rand() % RES_FISHES;
 		if (rand() % 2)
 		{

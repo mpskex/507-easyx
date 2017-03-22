@@ -1,9 +1,8 @@
 #include <main.h>
-
 #pragma comment( lib, "MSIMG32.LIB")
 
 //#define DEBUG
-#define ALPHA
+//#define ALPHA
 // Home work of Liu Fangrui @ 2017 02
 
 

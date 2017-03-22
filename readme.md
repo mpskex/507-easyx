@@ -22,7 +22,14 @@
     I like it very much for real, i love it and enjoy every minute with C.
     
 ## Third :Gaming
-*   I haven't work on the real game content yet. Please focus on this proj.
+*   About the Game content
+    *   Yes, this game is so weird and simple.-- For this game is totally a fish game. You have to eat your smaller *fellows* to survive. This game have limited time and the hardness is basic on the score you've win.(The more you win the more your enemies grow) By the way it have four difficulty options, you can chanllenge yourself to make your fish stronger!
+    *   For it is just a home work, the game content is approximately settled. I don't have any update plan further, But I won't stop game-developing. I will continue my project on obj.507, though it doesn't have much progress yet... 
+*   Thanks
+    *   I have to thank my roommate Zhang Yitian, and Zhang Junyao to support my dev. Actually this project spends me only less than two weeks. And I really enjoy this exprience.
+    *   I know this work is too simple, 'just like piece of *BEEP*', in another words. Any words are welcome, I will be very appreciated.
+*   The Elements I Used in this game
+    
 
 ## How To Build
 *   This project is build on VS2015.  All settings is settled in ```*.sln```
@@ -39,5 +46,3 @@
                 lfr199704@126.com
     College of Computer Science and Technology  
     Beijing University of Technology
-
-Now off the class /*Smile*/
