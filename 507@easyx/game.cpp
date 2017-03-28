@@ -304,10 +304,6 @@ int game_background_single(GAME &game, int SCREEN_W, int SCREEN_H)
 	return 0;
 }
 
-int game_npc_single(GAME &game, int SCREEN_W, int SCREEN_H)
-{
-	return 0;
-}
 
 int game_player_single(GAME &game, int SCREEN_W, int SCREEN_H)
 {
@@ -591,13 +587,6 @@ int fish_clear(GAME &game)
 	return 0;
 }
 
-int res_fishes_load(GAME &game)
-{
-	//game.npc_fishes = (IMAGE*)malloc(RES_FISHES * sizeof(IMAGE));
-	loadimage(&game.npc_fishes[0], _T("IMAGE"), _T("GAME_FISH_01"));
-	loadimage(&game.npc_fishes[1], _T("IMAGE"), _T("GAME_FISH_02"));
-	return 0;
-}
 
 int game_score(GAME &game, int SCREEN_W, int SCREEN_H)
 {
