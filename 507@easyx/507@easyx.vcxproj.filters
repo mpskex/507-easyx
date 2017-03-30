@@ -65,6 +65,9 @@
     <ClInclude Include="..\..\507%40easyx\507%40easyx\file_operator.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\507%40easyx\507%40easyx\fish.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\507%40easyx\507%40easyx\Resource.rc">

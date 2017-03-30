@@ -8,6 +8,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <fish.h>
+#include <file_operator.h>
+
 
 #define SPD_MAX_X		5			//	Maxium Speed in X axis
 #define SPD_MAX_Y		5			//	Maxium Speed in Y axis
@@ -28,6 +31,7 @@
 #define FISH_FREQ		10		//	Triggered every XX ms
 #define FISH_QUAT		2		//	Push XX fishes every time
 
+/*
 typedef struct fish
 {
 	float x;				//	Node fish's position in X
@@ -40,27 +44,32 @@ typedef struct fish
 	int flag;				//	From Left or Right
 	fish *next;				//	Pointer to next
 }FISH;
+*/
 
 typedef struct game
 {
 	//	mode 0 for rand position based
 	//	mode 1 for rand speed based
 	//	other is for rand speed without y
+	//	Settings
 	int			mode = 2;
 	int			speed_ratio = 1;
 
+	//	Variable Need to Save
 	wchar_t		*player;					//	Player's name
 	int			time_begin, time_sec;		//	Timer for count Game time
 	int			score = 0;					//	Score
 	bool		god;						//	GOD Flag
 	float		level;						//	Player's level
+	FISH		*fish = NULL;				//	Head of NPC chain list
 
+	//	Event
 	MOUSEMSG	mouse;						//	Mouse Message
-				
+
+	//Resource Associated		
 	IMAGE		npc_fishes[RES_FISHES];		//	NPC Texture Array
 	IMAGE		player_fish;				//	Player's fish texture
 	IMAGE		background;					//	Background Texture
-	FISH		*fish = NULL;				//	Head of NPC chain list
 }GAME;
 
 //	Game main
@@ -89,3 +98,6 @@ int fish_clear(GAME &game);
 
 int res_fishes_load(GAME &game);
 int res_fishes_clear(GAME &game);
+
+int load_game(GAME &game);
+int write_game(GAME game);

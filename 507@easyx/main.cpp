@@ -53,6 +53,19 @@ int main(void)
 			clearcliprgn();
 			break;
 		}
+		case MENU_RESUME:
+		{
+			load_setting(setting);
+			GAME game;
+			game.mode = setting.mode;
+			game.speed_ratio = setting.speed_ratio;
+			load_game(game);
+			// Initiate the object resources
+			clearcliprgn();
+			game_main(game, SCREEN_W, SCREEN_H);
+			clearcliprgn();
+			break;
+		}
 		case MENU_OPTION:
 		{
 			OPTION option;

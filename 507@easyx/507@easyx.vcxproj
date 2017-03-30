@@ -167,6 +167,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\507%40easyx\507%40easyx\about.h" />
     <ClInclude Include="..\..\507%40easyx\507%40easyx\file_operator.h" />
+    <ClInclude Include="..\..\507%40easyx\507%40easyx\fish.h" />
     <ClInclude Include="..\..\507%40easyx\507%40easyx\option.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="button.h" />

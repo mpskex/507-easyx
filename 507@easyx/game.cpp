@@ -169,6 +169,7 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 			//BeginBatchDraw();
 			settextstyle(72, 0, _T("SYSTEM"));
 			drawtext(_T("Loading..."), &title_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+			//write_game(game);
 			FlushBatchDraw();
 			fish_clear(game);
 			Sleep(200);
@@ -610,4 +611,38 @@ int game_score(GAME &game, int SCREEN_W, int SCREEN_H)
 			return 0;
 		}
 	}
+}
+
+int load_game(GAME &game)
+{
+	SAVE save;
+	if(load_save(save)==0)
+	{
+		//	Re-initiate the variables
+		game.level = save.level;
+		game.score = save.score;
+		game.time_begin = (unsigned)time(NULL);
+		game.time_sec = save.time + game.time_begin;
+		game.player = save.player;
+		game.god = false;
+		//	Reconstructing the chain set
+		game.fish = save.fish;
+		return 0;
+	}
+	else
+	{
+		return -1;
+	}
+}
+
+int write_game(GAME game)
+{
+	SAVE *save = (SAVE*)malloc(sizeof(SAVE));
+	save->level = game.level;
+	save->score = game.score;
+	save->time = game.time_sec - game.time_begin;
+	save->player = game.player;
+	save->fish = game.fish;
+	write_save(save);
+	return 0;
 }
