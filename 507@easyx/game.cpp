@@ -616,23 +616,17 @@ int game_score(GAME &game, int SCREEN_W, int SCREEN_H)
 int load_game(GAME &game)
 {
 	SAVE save;
-	if(load_save(save)==0)
-	{
-		//	Re-initiate the variables
-		game.level = save.level;
-		game.score = save.score;
-		game.time_begin = (unsigned)time(NULL);
-		game.time_sec = save.time + game.time_begin;
-		game.player = save.player;
-		game.god = false;
-		//	Reconstructing the chain set
-		game.fish = save.fish;
-		return 0;
-	}
-	else
-	{
-		return -1;
-	}
+	load_save(save);
+	//	Re-initiate the variables
+	game.level = save.level;
+	game.score = save.score;
+	game.time_begin = (unsigned)time(NULL);
+	game.time_sec = save.time + game.time_begin;
+	game.player = save.player;
+	game.god = false;
+	//	Reconstructing the chain set
+	game.fish = save.fish;
+	return 0;
 }
 
 int write_game(GAME game)

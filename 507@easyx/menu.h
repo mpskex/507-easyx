@@ -6,7 +6,7 @@
 #include <button.h>
 #include <file_operator.h>
 #define DEV				"BETA"
-#define VERSION			"0.8.4"
+#define VERSION			"0.8.5"
 
 //	DEBUG SWITCH
 //------VER------
