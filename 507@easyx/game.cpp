@@ -169,7 +169,7 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 			//BeginBatchDraw();
 			settextstyle(72, 0, _T("SYSTEM"));
 			drawtext(_T("Loading..."), &title_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-			//write_game(game);
+			write_game(game);
 			FlushBatchDraw();
 			fish_clear(game);
 			Sleep(200);
