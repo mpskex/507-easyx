@@ -10,7 +10,6 @@
 //	SCREEN_W	SCREEN_H	mode	speed_ratio
 typedef struct Save
 {
-	FILE		*file = NULL;
 	wchar_t		*player = NULL;
 	float		level = 1.0;
 	int			score = 0;
@@ -27,9 +26,8 @@ typedef struct Setting
 }SETTING;
 
 int load_setting(SETTING &setting);
-int write_setting(SETTING setting);
+int write_setting(SETTING &setting);
 int init_setting(SETTING &setting);
 
 int write_save(SAVE *save);
 int load_save(SAVE &save);
-int clear_save();

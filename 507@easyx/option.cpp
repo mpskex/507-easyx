@@ -198,8 +198,7 @@ int option_loop(OPTION option, int SCREEN_W, int SCREEN_H)
 			case OPTION_HARD:	option.setting.mode = 1; option.setting.speed_ratio = 10; break;
 			case OPTION_EXTREM:	option.setting.mode = 1; option.setting.speed_ratio = 5; break;
 			}
-			write_setting(option.setting); break;
-			return 2;
+			write_setting(option.setting); 
 			break;
 		}
 		default:	break;
