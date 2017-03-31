@@ -1,15 +1,13 @@
 #include <main.h>
 #pragma comment( lib, "MSIMG32.LIB")
 
-//#define DEBUG
-#define ALPHA
+
 // Home work of Liu Fangrui @ 2017 02
 
 
 int main(void)
 {
 	SETTING setting;
-	//init_setting(setting);
 	load_setting(setting);
 	// Define the Screen's Width and Height
 	int SCREEN_W = setting.SCREEN_W, SCREEN_H = setting.SCREEN_H;

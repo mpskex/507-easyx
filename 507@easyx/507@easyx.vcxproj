@@ -80,7 +80,7 @@
     <LibraryPath>..\lib2015;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
     <LibraryPath>..\lib2015;$(LibraryPath)</LibraryPath>
     <IncludePath>..\507@easyx;..\Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
@@ -99,12 +99,13 @@
       <SDLCheck>true</SDLCheck>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <MinimalRebuild>false</MinimalRebuild>
+      <PrecompiledHeaderFile>stdafx.h;</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>easyxw.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OptimizeReferences>false</OptimizeReferences>
+      <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>false</SuppressStartupBanner>
@@ -136,11 +137,12 @@
       <SDLCheck>true</SDLCheck>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <SuppressStartupBanner>false</SuppressStartupBanner>
+      <PrecompiledHeaderFile>stdafx.h;</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>false</OptimizeReferences>
+      <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>easyxw.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -174,6 +176,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\507%40easyx\507%40easyx\about.h" />
+    <ClInclude Include="build.h" />
     <ClInclude Include="..\..\507%40easyx\507%40easyx\file_operator.h" />
     <ClInclude Include="..\..\507%40easyx\507%40easyx\fish.h" />
     <ClInclude Include="..\..\507%40easyx\507%40easyx\option.h" />

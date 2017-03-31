@@ -6,6 +6,7 @@
 
 #include <resource.h>
 
+#include <build.h>
 #include <about.h>
 #include <menu.h>
 #include <intro.h>

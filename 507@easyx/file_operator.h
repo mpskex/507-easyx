@@ -27,7 +27,6 @@ typedef struct Setting
 
 int load_setting(SETTING &setting);
 int write_setting(SETTING &setting);
-int init_setting(SETTING &setting);
 
 int write_save(SAVE *save);
 int load_save(SAVE &save);
