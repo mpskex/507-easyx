@@ -32,3 +32,4 @@ int init_setting(SETTING &setting);
 
 int write_save(SAVE *save);
 int load_save(SAVE &save);
+int clear_save();

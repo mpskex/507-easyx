@@ -73,7 +73,7 @@ typedef struct game
 }GAME;
 
 //	Game main
-int game_main(GAME &game, int SCREEN_W, int SCREEN_H);
+int game_main(GAME &game, int _return, int SCREEN_W, int SCREEN_H);
 
 
 //	Player input name;

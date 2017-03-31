@@ -47,9 +47,10 @@ int main(void)
 			GAME game;
 			game.mode = setting.mode;
 			game.speed_ratio = setting.speed_ratio;
+			int _return = name_loop(game, SCREEN_W, SCREEN_H);
 			// Initiate the object resources
 			clearcliprgn();
-			game_main(game, SCREEN_W, SCREEN_H);
+			game_main(game, _return, SCREEN_W, SCREEN_H);
 			clearcliprgn();
 			break;
 		}
@@ -59,11 +60,24 @@ int main(void)
 			GAME game;
 			game.mode = setting.mode;
 			game.speed_ratio = setting.speed_ratio;
-			load_game(game);
-			// Initiate the object resources
-			clearcliprgn();
-			game_main(game, SCREEN_W, SCREEN_H);
-			clearcliprgn();
+			int _return = load_game(game);
+			if (_return == 0)
+			{
+				// Initiate the object resources
+				clearcliprgn();
+				game_main(game, 0, SCREEN_W, SCREEN_H);
+				clearcliprgn();
+			}
+			else
+			{
+				clearcliprgn();
+				RECT title_rect = { 0, 0, SCREEN_W, 3 * SCREEN_H / 4 };
+				settextcolor(BLACK);
+				settextstyle(72, 0, _T("SYSTEM"));
+				drawtext(_T("LOAD FILE FAILED!"), &title_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+				FlushBatchDraw();
+				Sleep(1000);
+			}
 			break;
 		}
 		case MENU_OPTION:

@@ -202,9 +202,8 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 	}
 }
 
-int game_main(GAME &game, int SCREEN_W, int SCREEN_H)
+int game_main(GAME &game, int _return, int SCREEN_W, int SCREEN_H)
 {
-	int _return = 0;
 	// Intiate the game data
 	game.level = 1.0;
 	loadimage(&game.npc_fishes[0], _T("IMAGE"), _T("GAME_FISH_01"));
@@ -215,11 +214,11 @@ int game_main(GAME &game, int SCREEN_W, int SCREEN_H)
 	loadimage(&(game.player_fish), _T("IMAGE"), _T("GAME_FISH_PLAYER"));
 	loadimage(&game.background, _T("IMAGE"), _T("GAME_BACKGROUND"));
 	//PlaySound((LPCTSTR)IDR_WAVE2, NULL, SND_ASYNC | SND_RESOURCE | SND_LOOP);
-	_return = name_loop(game, SCREEN_W, SCREEN_H);
 	if (_return == 0)
 	{
 		game_loop(game, SCREEN_W, SCREEN_H);
 		game_score(game, SCREEN_W, SCREEN_H);
+		fish_clear(game);
 		return 0;
 	}
 	else
@@ -227,6 +226,7 @@ int game_main(GAME &game, int SCREEN_W, int SCREEN_H)
 		return 1;
 	}
 }
+
 
 int game_status_single(GAME &game, int SCREEN_W, int SCREEN_H)
 {
@@ -584,7 +584,7 @@ int fish_clear(GAME &game)
 		ptr_b->next = NULL;
 		free(ptr);
 	}
-	free(game.fish);
+	//free(game.fish);
 	return 0;
 }
 
@@ -616,7 +616,7 @@ int game_score(GAME &game, int SCREEN_W, int SCREEN_H)
 int load_game(GAME &game)
 {
 	SAVE save;
-	load_save(save);
+	int _return = load_save(save);
 	//	Re-initiate the variables
 	game.level = save.level;
 	game.score = save.score;
@@ -626,7 +626,8 @@ int load_game(GAME &game)
 	game.god = false;
 	//	Reconstructing the chain set
 	game.fish = save.fish;
-	return 0;
+	//clear_save();
+	return _return;
 }
 
 int write_game(GAME game)
