@@ -109,9 +109,4 @@
   <ItemGroup>
     <None Include="..\..\507%40easyx\readme.md" />
   </ItemGroup>
-  <ItemGroup>
-    <Media Include="..\..\507%40easyx\res\battle_BGM%40DDBY.wav">
-      <Filter>资源文件</Filter>
-    </Media>
-  </ItemGroup>
 </Project>

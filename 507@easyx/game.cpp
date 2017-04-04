@@ -166,7 +166,6 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 		if (GetAsyncKeyState(VK_ESCAPE) & 1)
 		{
 			clearcliprgn();
-			//BeginBatchDraw();
 			settextstyle(72, 0, _T("SYSTEM"));
 			drawtext(_T("Loading..."), &title_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 			write_game(game);
@@ -175,14 +174,18 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 			Sleep(200);
 			return 0;
 		}
-		else if (GetAsyncKeyState(VK_RETURN) & 1)
+		else if (GetAsyncKeyState(67) & 1)
 		{
-
+			if (game.score >= BOMB_COST)
+			{
+				fish_clear(game);
+				game.score -= BOMB_COST;
+				game.god = true;
+			}
 		}
-		if (game.time_sec - game.time_begin > GAME_TIME)
+		if (game.time_sec - game.time_begin > game.time)
 		{
 			clearcliprgn();
-			//BeginBatchDraw();
 			settextstyle(72, 0, _T("SYSTEM"));
 			drawtext(_T("Loading..."), &title_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 			FlushBatchDraw();
@@ -205,7 +208,6 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 int game_main(GAME &game, int _return, int SCREEN_W, int SCREEN_H)
 {
 	// Intiate the game data
-	game.level = 1.0;
 	loadimage(&game.npc_fishes[0], _T("IMAGE"), _T("GAME_FISH_01"));
 	loadimage(&game.npc_fishes[1], _T("IMAGE"), _T("GAME_FISH_02"));
 	loadimage(&game.npc_fishes[2], _T("IMAGE"), _T("GAME_FISH_03"));
@@ -252,8 +254,8 @@ int game_status_single(GAME &game, int SCREEN_W, int SCREEN_H)
 	//	Timer
 	game.time_sec = (unsigned)time(NULL);
 	outtextxy(2 * (int)(SCREEN_W / 4), 3 * (int)(SCREEN_H / 4), _T("Time: "));
-	outtextxy(2 * (int)(SCREEN_W / 4), 5 * (int)(SCREEN_H / 6), (wchar_t)(((GAME_TIME - ((game.time_sec - game.time_begin))) / 10 )% 10  + 48));
-	outtextxy(2 * (int)(SCREEN_W / 4) + 15, 5 * (int)(SCREEN_H / 6), (wchar_t)((GAME_TIME - (game.time_sec - game.time_begin)) % 10 + 48));
+	outtextxy(2 * (int)(SCREEN_W / 4), 5 * (int)(SCREEN_H / 6), (wchar_t)(((game.time - ((game.time_sec - game.time_begin))) / 10 )% 10  + 48));
+	outtextxy(2 * (int)(SCREEN_W / 4) + 15, 5 * (int)(SCREEN_H / 6), (wchar_t)((game.time - (game.time_sec - game.time_begin)) % 10 + 48));
 
 	//	Score
 	outtextxy((int)(SCREEN_W / 4), 3 * (int)(SCREEN_H / 4), _T("Score: "));
@@ -620,8 +622,7 @@ int load_game(GAME &game)
 	//	Re-initiate the variables
 	game.level = save.level;
 	game.score = save.score;
-	game.time_begin = (unsigned)time(NULL);
-	game.time_sec = save.time + game.time_begin;
+	game.time = save.time;
 	game.player = save.player;
 	game.god = false;
 	//	Reconstructing the chain set
@@ -635,7 +636,7 @@ int write_game(GAME game)
 	SAVE *save = (SAVE*)malloc(sizeof(SAVE));
 	save->level = game.level;
 	save->score = game.score;
-	save->time = game.time_sec - game.time_begin;
+	save->time = game.time - game.time_sec + game.time_begin;
 	save->player = game.player;
 	save->fish = game.fish;
 	write_save(save);

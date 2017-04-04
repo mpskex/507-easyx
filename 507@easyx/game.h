@@ -12,6 +12,8 @@
 #include <file_operator.h>
 
 
+#define BOMB_COST		10			//	How many score does bomb cost
+
 #define SPD_MAX_X		5			//	Maxium Speed in X axis
 #define SPD_MAX_Y		5			//	Maxium Speed in Y axis
 #define SPD_DEC			0.05		//	Step value (Constant accelerate rate in abstract game time)
@@ -25,7 +27,7 @@
 #define BUFFSIZE 		25		//	buffsize for string
 #define RES_FISHES 		4		//	Amount of the npc fishes
 #define TIME			3
-#define GAME_TIME		99		//	sec
+//#define GAME_TIME		99		//	sec
 #define LOCK_RATE		10		//	ms
 #define GOD_TIME		50		//	ms
 #define FISH_FREQ		10		//	Triggered every XX ms
@@ -42,11 +44,14 @@ typedef struct game
 
 	//	Variable Need to Save
 	wchar_t		*player;					//	Player's name
-	int			time_begin, time_sec;		//	Timer for count Game time
+	int			time = 99;					//	Timer for count Game time
 	int			score = 0;					//	Score
 	bool		god;						//	GOD Flag
-	float		level;						//	Player's level
+	float		level = 1.0;				//	Player's level
 	FISH		*fish = NULL;				//	Head of NPC chain list
+
+	//	Variable Needs to Initiate at start
+	int			time_begin, time_sec;		//	Timer for count Game time
 
 	//	Event
 	MOUSEMSG	mouse;						//	Mouse Message

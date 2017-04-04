@@ -28,12 +28,12 @@ int main(void)
 	clearcliprgn();
 	// assign space for the Menu struct
 	MENU menu;
-	PlaySound((LPCTSTR)IDR_WAVE2, NULL, SND_ASYNC | SND_RESOURCE | SND_LOOP);
 	// Into the main loop
 	while (1)
 	{ 
 		clearcliprgn();
 		// Get the selected option from the loop return
+		PlaySound((LPCTSTR)IDR_WAVE_MENU, NULL, SND_ASYNC | SND_RESOURCE | SND_LOOP);
 		menu.select = menu_loop(menu, SCREEN_W, SCREEN_H);
 		// Switch the cases with the return value
 		switch (menu.select)
@@ -42,12 +42,14 @@ int main(void)
 		case MENU_NEWGAME:
 		{
 			load_setting(setting);
+			PlaySound((LPCTSTR)IDR_WAVE_NAME, NULL, SND_ASYNC | SND_RESOURCE | SND_LOOP);
 			GAME game;
 			game.mode = setting.mode;
 			game.speed_ratio = setting.speed_ratio;
 			int _return = name_loop(game, SCREEN_W, SCREEN_H);
 			// Initiate the object resources
 			clearcliprgn();
+			PlaySound((LPCTSTR)IDR_WAVE_GAME, NULL, SND_ASYNC | SND_RESOURCE | SND_LOOP);
 			game_main(game, _return, SCREEN_W, SCREEN_H);
 			clearcliprgn();
 			break;
@@ -63,6 +65,7 @@ int main(void)
 			{
 				// Initiate the object resources
 				clearcliprgn();
+				PlaySound((LPCTSTR)IDR_WAVE_GAME, NULL, SND_ASYNC | SND_RESOURCE | SND_LOOP);
 				game_main(game, 0, SCREEN_W, SCREEN_H);
 				clearcliprgn();
 			}
