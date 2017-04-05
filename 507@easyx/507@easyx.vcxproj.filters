@@ -71,6 +71,9 @@
     <ClInclude Include="build.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\507%40easyx\507%40easyx\pearl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\507%40easyx\507%40easyx\Resource.rc">
@@ -105,8 +108,22 @@
     <Image Include="..\..\507%40easyx\res\game_fish_04.bmp">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="..\..\507%40easyx\res\pearl.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\507%40easyx\readme.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\..\507%40easyx\res\game_loop.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="..\..\507%40easyx\res\menu_loop.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="..\..\507%40easyx\res\name_loop.wav">
+      <Filter>资源文件</Filter>
+    </Media>
   </ItemGroup>
 </Project>

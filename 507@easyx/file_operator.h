@@ -1,5 +1,6 @@
 #pragma once
 #include <fish.h>
+#include <pearl.h>
 
 #include <tchar.h>
 #include <stdlib.h>
@@ -15,6 +16,7 @@ typedef struct Save
 	int			score = 0;
 	int			time = 0;
 	FISH		*fish = NULL;
+	PEARL		pearl;
 } SAVE;
 
 typedef struct Setting

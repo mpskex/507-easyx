@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <pearl.h>
 #include <fish.h>
 #include <file_operator.h>
 
@@ -48,10 +49,12 @@ typedef struct game
 	int			score = 0;					//	Score
 	bool		god;						//	GOD Flag
 	float		level = 1.0;				//	Player's level
+	PEARL		pearl;
 	FISH		*fish = NULL;				//	Head of NPC chain list
 
 	//	Variable Needs to Initiate at start
 	int			time_begin, time_sec;		//	Timer for count Game time
+
 
 	//	Event
 	MOUSEMSG	mouse;						//	Mouse Message
@@ -60,6 +63,7 @@ typedef struct game
 	IMAGE		npc_fishes[RES_FISHES];		//	NPC Texture Array
 	IMAGE		player_fish;				//	Player's fish texture
 	IMAGE		background;					//	Background Texture
+	IMAGE		pearl_img;						//	Perl in game
 }GAME;
 
 //	Game main
@@ -91,3 +95,6 @@ int res_fishes_clear(GAME &game);
 
 int load_game(GAME &game);
 int write_game(GAME game);
+
+int pearl_judge(GAME &game, int SCREEN_W, int SCREEN_H);
+int game_pearl_single(GAME &game, int SCREEN_W, int SCREEN_H);

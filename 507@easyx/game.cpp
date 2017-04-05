@@ -110,6 +110,7 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 	game.time_begin = (unsigned)time(NULL);
 	//fish_add(game, 1000, SCREEN_W, 3*(int)(SCREEN_H / 4));
 
+
 	RECT title_rect = { 0, 0, SCREEN_W, 3 * SCREEN_H / 4 };
 	FlushMouseMsgBuffer();
 	while (1)
@@ -138,9 +139,20 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 		BeginBatchDraw();
 		
 		fish_judge(game, SCREEN_W, SCREEN_H);
+		pearl_judge(game, SCREEN_W, SCREEN_H);
 
 		game_background_single(game, SCREEN_W, SCREEN_H);
 		fish_single(game, SCREEN_W, 3 * (int)(SCREEN_H / 4));
+		if (game.pearl.flag)
+		{
+			game_pearl_single(game, SCREEN_W, 3 * (int)(SCREEN_H / 4));
+		}
+		else
+		{
+			game.pearl.x = rand() % SCREEN_W;
+			game.pearl.y = rand() % (3 * (int)(SCREEN_H / 4));
+			game.pearl.flag = true;
+		}
 
 		if (game.god == true)
 		{
@@ -215,6 +227,7 @@ int game_main(GAME &game, int _return, int SCREEN_W, int SCREEN_H)
 
 	loadimage(&(game.player_fish), _T("IMAGE"), _T("GAME_FISH_PLAYER"));
 	loadimage(&game.background, _T("IMAGE"), _T("GAME_BACKGROUND"));
+	loadimage(&game.pearl_img, _T("IMAGE"), _T("GAME_PEARL"));
 	//PlaySound((LPCTSTR)IDR_WAVE2, NULL, SND_ASYNC | SND_RESOURCE | SND_LOOP);
 	if (_return == 0)
 	{
@@ -316,7 +329,7 @@ int game_player_single(GAME &game, int SCREEN_W, int SCREEN_H)
 	TransparentBlt(dstDC, 
 					game.mouse.x - (int)(game.level * game.player_fish.getwidth() / 2),
 					game.mouse.y - (int)(game.level * game.player_fish.getheight() / 2),
-					(int)(game.level * game.player_fish.getheight()), 
+					(int)(game.level * game.player_fish.getwidth()), 
 					(int)(game.level * game.player_fish.getheight()), 
 					srcDC, 0, 0, 
 					game.player_fish.getwidth(), 
@@ -328,7 +341,7 @@ int game_player_single(GAME &game, int SCREEN_W, int SCREEN_H)
 int fish_judge(GAME &game, int SCREEN_W, int SCREEN_H)
 {
 	FISH *p, *p_t = NULL;
-	for (p = game.fish; p != NULL; p = p->next)
+	for (p = game.fish->next; p != NULL; p = p->next)
 	{
 		if	  ((p->x + ((p->level)* game.npc_fishes[p->res_num].getwidth() / 2) <= game.mouse.x + (3 * game.level * game.npc_fishes[p->res_num].getwidth() / 8) &&
 				p->x + ((p->level)* game.npc_fishes[p->res_num].getwidth() / 2) >= game.mouse.x - (3 * game.level * game.npc_fishes[p->res_num].getwidth() / 8) &&
@@ -373,7 +386,7 @@ int fish_single(GAME &game, int SCREEN_W, int SCREEN_H)
 	HDC srcDC = GetImageHDC(&tmp);
 	if (game.fish != NULL)
 	{
-		for (p = game.fish; p != NULL; p = p->next)
+		for (p = game.fish->next; p != NULL; p = p->next)
 		{
 			tmp = game.npc_fishes[p->res_num];
 			HDC srcDC = GetImageHDC(&tmp);
@@ -513,7 +526,7 @@ int fish_init(GAME &game, int SCREEN_W, int SCREEN_H)
 
 int fish_add(GAME &game, int num, int SCREEN_W, int SCREEN_H)
 {
-	FISH *temp;
+	FISH *temp = NULL;
 
 	// Get the tail
 	for (temp = game.fish; temp->next != NULL; temp = temp->next);
@@ -625,6 +638,7 @@ int load_game(GAME &game)
 	game.time = save.time;
 	game.player = save.player;
 	game.god = false;
+	game.pearl = save.pearl;
 	//	Reconstructing the chain set
 	game.fish = save.fish;
 	//clear_save();
@@ -639,6 +653,41 @@ int write_game(GAME game)
 	save->time = game.time - game.time_sec + game.time_begin;
 	save->player = game.player;
 	save->fish = game.fish;
+	save->pearl = game.pearl;
 	write_save(save);
+	return 0;
+}
+
+int game_pearl_single(GAME &game, int SCREEN_W, int SCREEN_H)
+{
+	HDC dstDC = GetImageHDC();
+	HDC srcDC = GetImageHDC(&game.pearl_img);
+
+	TransparentBlt(dstDC,
+		game.pearl.x,
+		game.pearl.y,
+		game.pearl_img.getwidth(),
+		game.pearl_img.getheight(),
+		srcDC, 0, 0,
+		game.pearl_img.getwidth(),
+		game.pearl_img.getheight(),
+		0x000000);
+	return 0;
+}
+
+
+int pearl_judge(GAME &game, int SCREEN_W, int SCREEN_H)
+{
+	if ((game.pearl.x + (game.pearl_img.getwidth() / 2) <= game.mouse.x + (3 * game.pearl_img.getwidth() / 8) &&
+		game.pearl.x + (game.pearl_img.getwidth() / 2) >= game.mouse.x - (3 * game.pearl_img.getwidth() / 8) &&
+		game.pearl.y + (game.pearl_img.getheight() / 2) <= game.mouse.y + (3 * game.pearl_img.getheight() / 8) &&
+		game.pearl.y + (game.pearl_img.getheight() / 2) >= game.mouse.y - (3 * game.pearl_img.getheight() / 8)))
+	{
+		if (game.god == false && game.pearl.flag == true)
+		{
+			game.score += 100;
+			game.pearl.flag = false;
+		}
+	}
 	return 0;
 }

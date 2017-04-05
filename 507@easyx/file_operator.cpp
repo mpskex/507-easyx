@@ -28,6 +28,8 @@ int write_save(SAVE *save)
 	//	Here needs to do with the wchar_t!
 	//fwprintf_s(file, L"%wS\t", save->player);
 	fprintf_s(file, "%f\t%d\t%d\t\t", save->level, save->score, save->time);
+	fprintf_s(file, "==PEARL==\t\t");
+	fprintf_s(file, "%d\t%d\t%d\t\t", save->pearl.x, save->pearl.y, save->pearl.flag);
 	fprintf_s(file, "==FISH==\t\t");
 	FISH *p = save->fish;
 	while (p != NULL)
@@ -49,6 +51,8 @@ int load_save(SAVE &save)
 		//fwscanf_s(file, L"%wS\t", save.player);
 		save.player = _T("saved");
 		fscanf_s(file, "%f\t%d\t%d\t\t", &save.level, &save.score, &save.time);
+		fscanf_s(file, "==PEARL==\t\t");
+		fscanf_s(file, "%d\t%d\t%d\t\t", &save.pearl.x, &save.pearl.y, &save.pearl.flag);
 		fscanf_s(file, "==FISH==\t\t");
 		FISH * head = (FISH*)malloc(sizeof(FISH));
 		fscanf_s(file, "%f\t%f\t%f\t%f\t%f\t%d\t%d\t\t", &head->x, &head->y, &head->s_x, &head->s_y, &head->level, &head->res_num, &head->flag);

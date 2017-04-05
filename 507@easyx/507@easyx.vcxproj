@@ -176,6 +176,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\507%40easyx\507%40easyx\about.h" />
+    <ClInclude Include="..\..\507%40easyx\507%40easyx\pearl.h" />
     <ClInclude Include="build.h" />
     <ClInclude Include="..\..\507%40easyx\507%40easyx\file_operator.h" />
     <ClInclude Include="..\..\507%40easyx\507%40easyx\fish.h" />
@@ -200,9 +201,15 @@
     <Image Include="..\..\507%40easyx\res\icon.ico" />
     <Image Include="..\..\507%40easyx\res\intro.jpg" />
     <Image Include="..\..\507%40easyx\res\menu.jpg" />
+    <Image Include="..\..\507%40easyx\res\pearl.bmp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\507%40easyx\readme.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\..\507%40easyx\res\game_loop.wav" />
+    <Media Include="..\..\507%40easyx\res\menu_loop.wav" />
+    <Media Include="..\..\507%40easyx\res\name_loop.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
