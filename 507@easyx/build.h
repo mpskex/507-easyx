@@ -4,13 +4,13 @@
 
 #ifdef DEBUG
 	#define DEV				"BETA"
-	#define VERSION			"0.9.1"
+	#define VERSION			"1.0.1"
 	#define DEBUG
 #endif
 
 #ifdef RELEASE
-	#define DEV				"ALPHA"
-	#define VERSION			"0.9.1"
+	#define DEV				"RELEASE"
+	#define VERSION			"1.0.0"
 	#define DEBUG
 	#define ALPHA
 #endif

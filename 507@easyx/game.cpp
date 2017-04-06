@@ -220,20 +220,22 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 int game_main(GAME &game, int _return, int SCREEN_W, int SCREEN_H)
 {
 	// Intiate the game data
-	loadimage(&game.npc_fishes[0], _T("IMAGE"), _T("GAME_FISH_01"));
-	loadimage(&game.npc_fishes[1], _T("IMAGE"), _T("GAME_FISH_02"));
-	loadimage(&game.npc_fishes[2], _T("IMAGE"), _T("GAME_FISH_03"));
-	loadimage(&game.npc_fishes[3], _T("IMAGE"), _T("GAME_FISH_04"));
+	
+	loadimage(&(game.npc_fishes[0]), _T("IMAGE"), _T("GAME_FISH_01"));
+	loadimage(&(game.npc_fishes[1]), _T("IMAGE"), _T("GAME_FISH_02"));
+	loadimage(&(game.npc_fishes[2]), _T("IMAGE"), _T("GAME_FISH_03"));
+	loadimage(&(game.npc_fishes[3]), _T("IMAGE"), _T("GAME_FISH_04"));
 
 	loadimage(&(game.player_fish), _T("IMAGE"), _T("GAME_FISH_PLAYER"));
-	loadimage(&game.background, _T("IMAGE"), _T("GAME_BACKGROUND"));
-	loadimage(&game.pearl_img, _T("IMAGE"), _T("GAME_PEARL"));
-	//PlaySound((LPCTSTR)IDR_WAVE2, NULL, SND_ASYNC | SND_RESOURCE | SND_LOOP);
+	loadimage(&(game.background), _T("IMAGE"), _T("GAME_BACKGROUND"));
+	loadimage(&(game.pearl_img), _T("IMAGE"), _T("GAME_PEARL"));
+	
 	if (_return == 0)
 	{
 		game_loop(game, SCREEN_W, SCREEN_H);
 		game_score(game, SCREEN_W, SCREEN_H);
 		fish_clear(game);
+		free(game.player);
 		return 0;
 	}
 	else
@@ -526,7 +528,7 @@ int fish_init(GAME &game, int SCREEN_W, int SCREEN_H)
 
 int fish_add(GAME &game, int num, int SCREEN_W, int SCREEN_H)
 {
-	FISH *temp = NULL;
+	FISH *temp = game.fish;
 
 	// Get the tail
 	for (temp = game.fish; temp->next != NULL; temp = temp->next);
@@ -632,16 +634,21 @@ int load_game(GAME &game)
 {
 	SAVE save;
 	int _return = load_save(save);
-	//	Re-initiate the variables
-	game.level = save.level;
-	game.score = save.score;
-	game.time = save.time;
-	game.player = save.player;
-	game.god = false;
-	game.pearl = save.pearl;
-	//	Reconstructing the chain set
-	game.fish = save.fish;
-	//clear_save();
+	if (_return == 0)
+	{
+		//	Re-initiate the variables
+		game.level = save.level;
+		game.score = save.score;
+		game.time = save.time;
+		game.player = (wchar_t*)malloc(BUFFSIZE * sizeof(wchar_t));
+		wcscpy_s(game.player, BUFFSIZE, save.player);
+		free(save.player);
+		game.god = true;
+		game.pearl = save.pearl;
+		//	Reconstructing the chain set
+		game.fish = save.fish;
+		//clear_save();
+	}
 	return _return;
 }
 

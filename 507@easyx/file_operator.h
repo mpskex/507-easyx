@@ -3,6 +3,7 @@
 #include <pearl.h>
 
 #include <tchar.h>
+#include <Windows.h>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -32,3 +33,6 @@ int write_setting(SETTING &setting);
 
 int write_save(SAVE *save);
 int load_save(SAVE &save);
+
+void TcharToChar(const TCHAR * tchar, char * _char);
+void CharToTchar(const char * _char, TCHAR * tchar);

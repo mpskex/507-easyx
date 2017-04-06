@@ -58,7 +58,6 @@ int main(void)
 		{
 			load_setting(setting);
 			GAME game;
-			game.mode = setting.mode;
 			game.speed_ratio = setting.speed_ratio;
 			int _return = load_game(game);
 			if (_return == 0)
