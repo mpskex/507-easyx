@@ -11,6 +11,6 @@
 #ifdef RELEASE
 	#define DEV				"RELEASE"
 	#define VERSION			"1.0.0"
-	#define DEBUG
+	#define SHOW_VER
 	#define ALPHA
 #endif

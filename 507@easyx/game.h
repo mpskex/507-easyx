@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <build.h>
 #include <pearl.h>
 #include <fish.h>
 #include <file_operator.h>

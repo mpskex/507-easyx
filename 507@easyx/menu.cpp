@@ -100,6 +100,7 @@ int menu_loop(MENU &menu, int SCREEN_W, int SCREEN_H)
 		// Calling the button drawing function
 		button_return = menu_button_single(SCREEN_W, SCREEN_H, cursor);
 #ifdef SHOW_VER
+		settextcolor(BLACK);
 		settextstyle(12, 0, _T("SYSTEM"));
 		outtextxy(0, SCREEN_H - 20, _T(DEV));
 		outtextxy(0 + 100, SCREEN_H - 20, _T(VERSION));

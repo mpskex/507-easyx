@@ -1,5 +1,4 @@
 #include <game.h>
-#define DEBUG
 #pragma comment(lib, "winmm.lib")
 
 int name_loop(GAME &game, int SCREEN_W, int SCREEN_H)
@@ -235,7 +234,6 @@ int game_main(GAME &game, int _return, int SCREEN_W, int SCREEN_H)
 		game_loop(game, SCREEN_W, SCREEN_H);
 		game_score(game, SCREEN_W, SCREEN_H);
 		fish_clear(game);
-		free(game.player);
 		return 0;
 	}
 	else

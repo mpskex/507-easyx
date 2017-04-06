@@ -47,7 +47,12 @@ int main(void)
 			game.mode = setting.mode;
 			game.speed_ratio = setting.speed_ratio;
 			int _return = name_loop(game, SCREEN_W, SCREEN_H);
-			// Initiate the object resources
+			//	If player enter a null str
+			if (game.player[0] == L'\0')
+			{
+				game.player = _T("NO-NAME");
+			}
+			//	Initiate the object resources
 			clearcliprgn();
 			PlaySound((LPCTSTR)IDR_WAVE_GAME, NULL, SND_ASYNC | SND_RESOURCE | SND_LOOP);
 			game_main(game, _return, SCREEN_W, SCREEN_H);

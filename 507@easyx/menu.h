@@ -7,10 +7,6 @@
 #include <file_operator.h>
 #include <build.h>
 
-//	DEBUG SWITCH
-//------VER------
-#define SHOW_VER
-//---------------
 
 //-------MESSAGES-----------
 #define MENU_QUIT		1000
