@@ -27,8 +27,6 @@ int write_save(SAVE *save)
 	char temp_str[BUFFSIZE];
 	TcharToChar(save->player, temp_str);
 	fopen_s(&file, "Game.save", "wb");
-	//	Here needs to do with the wchar_t!
-	//fwprintf_s(file, L"%wS\t", save->player);
 	fprintf_s(file, "%s\t", temp_str);
 	fprintf_s(file, "%f\t%d\t%d\t\t", save->level, save->score, save->time);
 	fprintf_s(file, "==PEARL==\t\t");
@@ -52,7 +50,6 @@ int load_save(SAVE &save)
 	fopen_s(&file, "Game.save", "r");
 	if (file != NULL)
 	{
-		//	Here need to fight with wchar_t
 		fscanf_s(file, "%s\t", temp_str, BUFFSIZE);
 		CharToTchar(temp_str, temp_str_t);
 		save.player = (wchar_t*)malloc(BUFFSIZE * sizeof(wchar_t));
@@ -83,17 +80,17 @@ int load_save(SAVE &save)
 	}
 }
 
-//将TCHAR转为char   
-//*tchar是TCHAR类型指针，*_char是char类型指针   
+//	Converting tcahr string to char string 
 void TcharToChar(const TCHAR * tchar, char * _char)
 {
 	int iLength;
-	//获取字节长度   
+	//	Get the length of the string
 	iLength = WideCharToMultiByte(CP_ACP, 0, tchar, -1, NULL, 0, NULL, NULL);
-	//将tchar值赋给_char    
+	//	Copy
 	WideCharToMultiByte(CP_ACP, 0, tchar, -1, _char, iLength, NULL, NULL);
 }
 
+//	Converting cahr string to tchar string 
 void CharToTchar(const char * _char, TCHAR * tchar)
 {
 	int iLength;

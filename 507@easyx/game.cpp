@@ -380,7 +380,6 @@ int fish_single(GAME &game, int SCREEN_W, int SCREEN_H)
 {
 	FISH *p, *p_t = NULL;
 	IMAGE tmp;
-	//tmp = game.npc_fish;
 	//srand((unsigned)time(NULL));
 	HDC dstDC = GetImageHDC();
 	HDC srcDC = GetImageHDC(&tmp);
@@ -599,6 +598,7 @@ int fish_clear(GAME &game)
 		ptr_b->next = NULL;
 		free(ptr);
 	}
+	//	It cause Error (need to be fixed)
 	//free(game.fish);
 	return 0;
 }
@@ -645,7 +645,6 @@ int load_game(GAME &game)
 		game.pearl = save.pearl;
 		//	Reconstructing the chain set
 		game.fish = save.fish;
-		//clear_save();
 	}
 	return _return;
 }

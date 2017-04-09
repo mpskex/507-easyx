@@ -64,7 +64,7 @@ typedef struct game
 	IMAGE		npc_fishes[RES_FISHES];		//	NPC Texture Array
 	IMAGE		player_fish;				//	Player's fish texture
 	IMAGE		background;					//	Background Texture
-	IMAGE		pearl_img;						//	Perl in game
+	IMAGE		pearl_img;					//	Perl in game
 }GAME;
 
 //	Game main
