@@ -185,6 +185,12 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 			Sleep(200);
 			return 0;
 		}
+#ifdef DEBUG
+		else if (GetAsyncKeyState(VK_SPACE) & 1)
+		{
+			while (!(GetAsyncKeyState(VK_ESCAPE) & 1));
+		}
+#endif
 		else if (GetAsyncKeyState(67) & 1)
 		{
 			if (game.score >= BOMB_COST)
@@ -199,6 +205,16 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 			clearcliprgn();
 			settextstyle(72, 0, _T("SYSTEM"));
 			drawtext(_T("Loading..."), &title_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+			FlushBatchDraw();
+			fish_clear(game);
+			Sleep(200);
+			return 0;
+		}
+		if (game.level < 0.8)
+		{
+			clearcliprgn();
+			settextstyle(72, 0, _T("SYSTEM"));
+			drawtext(_T("GAME OVER"), &title_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 			FlushBatchDraw();
 			fish_clear(game);
 			Sleep(200);
@@ -279,9 +295,9 @@ int game_status_single(GAME &game, int SCREEN_W, int SCREEN_H)
 
 	//	Level
 	outtextxy(15, 3 * (int)(SCREEN_H / 4), _T("Lv: "));
-	outtextxy(30, 5 * (int)(SCREEN_H / 6), (wchar_t)(((int)(game.level - 1)) % 10 + 48));
-	outtextxy(45, 5 * (int)(SCREEN_H / 6), (wchar_t)((int)((game.level - 1) * 10) % 10 + 48));
-	outtextxy(60, 5 * (int)(SCREEN_H / 6), (wchar_t)(((int)((game.level - 1) * 100)) % 10 + 48));
+	outtextxy(30, 5 * (int)(SCREEN_H / 6), (wchar_t)(((int)(game.level)) % 10 + 48));
+	outtextxy(45, 5 * (int)(SCREEN_H / 6), (wchar_t)((int)((game.level) * 10) % 10 + 48));
+	outtextxy(60, 5 * (int)(SCREEN_H / 6), (wchar_t)(((int)((game.level) * 100)) % 10 + 48));
 
 	//-------------------Time Box-----------------------
 
@@ -351,7 +367,7 @@ int fish_judge(GAME &game, int SCREEN_W, int SCREEN_H)
 			if (p->level > game.level && game.god == false)
 			{
 				if (game.score > 5) game.score -= 5;
-				game.level -= (float)0.05;
+				game.level -= (float)0.1;
 				game.god = true;
 				return -1;
 			}
@@ -360,7 +376,7 @@ int fish_judge(GAME &game, int SCREEN_W, int SCREEN_H)
 				p = fish_rm(game, p);
 				// Reward to player
 				game.score++;
-				game.level += (float)0.01;
+				game.level += (float)0.02;
 
 				return 1;
 			}

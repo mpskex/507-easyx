@@ -13,7 +13,7 @@ int main(void)
 	int SCREEN_W = setting.SCREEN_W, SCREEN_H = setting.SCREEN_H;
 	initgraph(SCREEN_W, SCREEN_H);
 	/* This part only be compiled in alpha or released version */
-#ifdef ALPHA
+#ifdef SHOW_INTRO
 	{
 		// the Intro
 		INTRO intro;
