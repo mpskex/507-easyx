@@ -99,6 +99,7 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 	clearcliprgn();
 	float level = 0;
 	int freq = 0;
+	int ctl = 1;
 	int god_count = 0;
 	HANDLE wait = NULL;
 	game.god = false;
@@ -139,8 +140,12 @@ int game_loop(GAME &game, int SCREEN_W, int SCREEN_H)
 		
 		fish_judge(game, SCREEN_W, SCREEN_H);
 		pearl_judge(game, SCREEN_W, SCREEN_H);
-
-		game_background_single(game, SCREEN_W, SCREEN_H);
+		if (freq % FISH_FREQ == 0)
+		{
+			if (ctl > 4) ctl = 1;
+			else ctl++;
+		}
+		game_background_single(game, SCREEN_W, SCREEN_H, ctl);
 		fish_single(game, SCREEN_W, 3 * (int)(SCREEN_H / 4));
 		if (game.pearl.flag)
 		{
@@ -319,19 +324,27 @@ int game_status_single(GAME &game, int SCREEN_W, int SCREEN_H)
 	return 0;
 }
 
-int game_background_single(GAME &game, int SCREEN_W, int SCREEN_H)
+int game_background_single(GAME &game, int SCREEN_W, int SCREEN_H, int frame)
 {
 	HDC dstDC = GetImageHDC();
 	HDC srcDC = GetImageHDC(&game.background);
-
+	int tx = 0, ty = 0;
+	switch (frame)
+	{
+	case 1: tx = 0; ty = 0; break;
+	case 2: tx = game.background.getwidth() / 2; ty = 0; break;
+	case 3: tx = 0; ty = game.background.getheight() / 2; break;
+	case 4: tx = game.background.getwidth() / 2; ty = game.background.getheight() / 2; break;
+	default: tx = 0; ty = 0; break;
+	}
 	TransparentBlt(dstDC,
 		0,
 		0,
 		SCREEN_W,
 		SCREEN_H,
-		srcDC, 0, 0,
-		game.background.getwidth(),
-		game.background.getheight(),
+		srcDC, tx, ty,
+		game.background.getwidth() / 2,
+		game.background.getheight() / 2,
 		0x000000);
 	return 0;
 }
@@ -359,8 +372,8 @@ int fish_judge(GAME &game, int SCREEN_W, int SCREEN_H)
 	FISH *p, *p_t = NULL;
 	for (p = game.fish->next; p != NULL; p = p->next)
 	{
-		if	  ((p->x + ((p->level)* game.npc_fishes[p->res_num].getwidth() / 2) <= game.mouse.x + (3 * game.level * game.npc_fishes[p->res_num].getwidth() / 8) &&
-				p->x + ((p->level)* game.npc_fishes[p->res_num].getwidth() / 2) >= game.mouse.x - (3 * game.level * game.npc_fishes[p->res_num].getwidth() / 8) &&
+		if	  ((p->x + ((p->level)* game.npc_fishes[p->res_num].getwidth() / 4) <= game.mouse.x + (3 * game.level * game.npc_fishes[p->res_num].getwidth() / 16) &&
+				p->x + ((p->level)* game.npc_fishes[p->res_num].getwidth() / 4) >= game.mouse.x - (3 * game.level * game.npc_fishes[p->res_num].getwidth() / 16) &&
 				p->y + ((p->level)* game.npc_fishes[p->res_num].getheight() / 2) <= game.mouse.y + (3 * game.level * game.npc_fishes[p->res_num].getheight() / 8) &&
 				p->y + ((p->level)* game.npc_fishes[p->res_num].getheight() / 2) >= game.mouse.y - (3 * game.level * game.npc_fishes[p->res_num].getheight() / 8)))
 		{
@@ -405,13 +418,22 @@ int fish_single(GAME &game, int SCREEN_W, int SCREEN_H)
 		{
 			tmp = game.npc_fishes[p->res_num];
 			HDC srcDC = GetImageHDC(&tmp);
+			int tx = 0;
+			if (p->flag == 1)
+			{
+				tx = 0;
+			}
+			else
+			{
+				tx = tmp.getwidth() / 2;
+			}
 			TransparentBlt(dstDC,
 							(int)(p->x),
 							(int)(p->y),
-							(p->level) * tmp.getwidth(),
+							(p->level) * tmp.getwidth() / 2,
 							(p->level) * tmp.getheight(),
-							srcDC, 0, 0,
-							tmp.getwidth(),
+							srcDC, tx, 0,
+							tmp.getwidth()/2,
 							tmp.getheight(),
 							0x000000);
 			//	Difficulty associated

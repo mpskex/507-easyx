@@ -77,7 +77,7 @@ int name_loop(GAME &game, int SCREEN_W, int SCREEN_H);
 int game_loop(GAME &game, int SCREEN_W, int SCREEN_H);
 //	single small module 
 int game_status_single(GAME &game, int SCREEN_W, int SCREEN_H);
-int game_background_single(GAME &game, int SCREEN_W, int SCRREN_H);
+int game_background_single(GAME &game, int SCREEN_W, int SCRREN_H, int frame);
 int game_player_single(GAME &game, int SCREEN_W, int SCREEN_H);
 int game_score(GAME &game, int SCREEN_W, int SCREEN_H);
 
