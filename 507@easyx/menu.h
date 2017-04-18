@@ -25,4 +25,4 @@ typedef struct menu
 } MENU;
 
 int menu_loop(MENU &menu, int SCREEN_W, int SCREEN_H);
-void menu_show_version(int SCREEN_W, int SCREEN_H);
+
